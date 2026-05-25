@@ -1,6 +1,4 @@
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
 
 export async function POST(request: Request) {
   try {
@@ -14,21 +12,32 @@ export async function POST(request: Request) {
       );
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    try {
+      const { writeFile, mkdir } = await import('fs/promises');
+      const path = await import('path');
 
-    // Create a safe filename with timestamp
-    const sanitized = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const filename = `${Date.now()}-${sanitized}`;
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
 
-    // Ensure the uploads directory exists
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-    await mkdir(uploadsDir, { recursive: true });
+      // Create a safe filename with timestamp
+      const sanitized = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+      const filename = `${Date.now()}-${sanitized}`;
 
-    const filepath = path.join(uploadsDir, filename);
-    await writeFile(filepath, buffer);
+      // Ensure the uploads directory exists
+      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+      await mkdir(uploadsDir, { recursive: true });
 
-    return NextResponse.json({ path: `/uploads/${filename}` });
+      const filepath = path.join(uploadsDir, filename);
+      await writeFile(filepath, buffer);
+
+      return NextResponse.json({ path: `/uploads/${filename}` });
+    } catch {
+      // Filesystem not writable (e.g., on Vercel)
+      return NextResponse.json(
+        { error: 'File upload is not available in demo mode.' },
+        { status: 503 }
+      );
+    }
   } catch (error) {
     console.error('Error uploading file:', error);
     return NextResponse.json(

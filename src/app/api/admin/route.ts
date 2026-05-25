@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
 
 const ADMIN_PASSWORD = 'accessmap2024';
 
@@ -19,16 +18,22 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const unapprovedPlaces = await db.place.findMany({
-      where: { approved: false },
-      orderBy: { submittedAt: 'desc' },
-      include: {
-        reviews: true,
-        edits: true,
-      },
-    });
+    try {
+      const { db } = await import('@/lib/db');
+      const unapprovedPlaces = await db.place.findMany({
+        where: { approved: false },
+        orderBy: { submittedAt: 'desc' },
+        include: {
+          reviews: true,
+          edits: true,
+        },
+      });
 
-    return NextResponse.json(unapprovedPlaces);
+      return NextResponse.json(unapprovedPlaces);
+    } catch {
+      // Database not available
+      return NextResponse.json([]);
+    }
   } catch (error) {
     console.error('Error fetching unapproved places:', error);
     return NextResponse.json(
@@ -57,20 +62,28 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const place = await db.place.findUnique({ where: { id } });
-    if (!place) {
+    try {
+      const { db } = await import('@/lib/db');
+      const place = await db.place.findUnique({ where: { id } });
+      if (!place) {
+        return NextResponse.json(
+          { error: 'Place not found' },
+          { status: 404 }
+        );
+      }
+
+      const updatedPlace = await db.place.update({
+        where: { id },
+        data: { approved: true },
+      });
+
+      return NextResponse.json(updatedPlace);
+    } catch {
       return NextResponse.json(
-        { error: 'Place not found' },
-        { status: 404 }
+        { error: 'Database not available' },
+        { status: 503 }
       );
     }
-
-    const updatedPlace = await db.place.update({
-      where: { id },
-      data: { approved: true },
-    });
-
-    return NextResponse.json(updatedPlace);
   } catch (error) {
     console.error('Error approving place:', error);
     return NextResponse.json(
@@ -99,17 +112,25 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const place = await db.place.findUnique({ where: { id } });
-    if (!place) {
+    try {
+      const { db } = await import('@/lib/db');
+      const place = await db.place.findUnique({ where: { id } });
+      if (!place) {
+        return NextResponse.json(
+          { error: 'Place not found' },
+          { status: 404 }
+        );
+      }
+
+      await db.place.delete({ where: { id } });
+
+      return NextResponse.json({ message: 'Place deleted successfully' });
+    } catch {
       return NextResponse.json(
-        { error: 'Place not found' },
-        { status: 404 }
+        { error: 'Database not available' },
+        { status: 503 }
       );
     }
-
-    await db.place.delete({ where: { id } });
-
-    return NextResponse.json({ message: 'Place deleted successfully' });
   } catch (error) {
     console.error('Error deleting place:', error);
     return NextResponse.json(
