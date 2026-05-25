@@ -45,7 +45,7 @@ export default function SearchFilterBar() {
   };
 
   return (
-    <div className="px-3 py-2.5" dir={isArabic ? 'rtl' : 'ltr'}>
+    <div className="px-3 py-2" dir={isArabic ? 'rtl' : 'ltr'}>
       {/* Search row */}
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
@@ -54,14 +54,14 @@ export default function SearchFilterBar() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t('searchPlaceholder', language)}
-            className={`${isArabic ? 'pr-9' : 'pl-9'} h-9 text-sm bg-gray-50 border-gray-200 focus:bg-white focus:border-teal-300 rounded-lg`}
+            className={`${isArabic ? 'pr-9' : 'pl-9'} h-9 text-sm bg-gray-50/80 border-gray-200 focus:bg-white focus:border-teal-300 focus:ring-1 focus:ring-teal-200 rounded-xl transition-all`}
             dir={isArabic ? 'rtl' : 'ltr'}
             aria-label={t('searchPlaceholder', language)}
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-gray-300 hover:text-gray-500 ${isArabic ? 'left-3' : 'right-3'}`}
+              className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-gray-300 hover:text-gray-500 transition-colors ${isArabic ? 'left-3' : 'right-3'}`}
               aria-label="Clear search"
             >
               <X className="h-3.5 w-3.5" />
@@ -72,10 +72,10 @@ export default function SearchFilterBar() {
         {/* Filter toggle button */}
         <button
           onClick={() => setFiltersOpen(!filtersOpen)}
-          className={`flex items-center justify-center h-9 w-9 rounded-lg border text-sm transition-colors shrink-0 ${
+          className={`flex items-center justify-center h-9 w-9 rounded-xl border text-sm transition-all duration-200 shrink-0 ${
             filtersOpen || hasActiveFilter
-              ? 'bg-teal-50 border-teal-300 text-teal-600'
-              : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100'
+              ? 'bg-teal-50 border-teal-300 text-teal-600 shadow-sm shadow-teal-100'
+              : 'bg-gray-50/80 border-gray-200 text-gray-500 hover:bg-gray-100'
           }`}
           aria-label="Toggle filters"
         >
@@ -85,7 +85,7 @@ export default function SearchFilterBar() {
         {/* Desktop: City and Category selects inline */}
         <div className="hidden sm:flex items-center gap-2">
           <Select value={cityFilter || 'all'} onValueChange={setCityFilter}>
-            <SelectTrigger className="w-[140px] h-9 text-sm rounded-lg border-gray-200" aria-label={t('filterCity', language)}>
+            <SelectTrigger className="w-[140px] h-9 text-sm rounded-xl border-gray-200 bg-gray-50/80 focus:ring-1 focus:ring-teal-200" aria-label={t('filterCity', language)}>
               <SelectValue placeholder={t('filterCity', language)} />
             </SelectTrigger>
             <SelectContent>
@@ -96,7 +96,7 @@ export default function SearchFilterBar() {
             </SelectContent>
           </Select>
           <Select value={categoryFilter || 'all'} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-[150px] h-9 text-sm rounded-lg border-gray-200" aria-label={t('filterCategory', language)}>
+            <SelectTrigger className="w-[150px] h-9 text-sm rounded-xl border-gray-200 bg-gray-50/80 focus:ring-1 focus:ring-teal-200" aria-label={t('filterCategory', language)}>
               <SelectValue placeholder={t('filterCategory', language)} />
             </SelectTrigger>
             <SelectContent>
@@ -120,7 +120,7 @@ export default function SearchFilterBar() {
           {hasActiveFilter && (
             <button
               onClick={clearFilters}
-              className="text-xs text-teal-600 hover:text-teal-700 font-medium whitespace-nowrap"
+              className="text-xs text-teal-600 hover:text-teal-700 font-medium whitespace-nowrap transition-colors"
             >
               {isArabic ? 'مسح الفلاتر' : 'Clear filters'}
             </button>
@@ -132,7 +132,7 @@ export default function SearchFilterBar() {
       {filtersOpen && (
         <div className="flex items-center gap-2 mt-2 sm:hidden">
           <Select value={cityFilter || 'all'} onValueChange={setCityFilter}>
-            <SelectTrigger className="flex-1 h-9 text-sm rounded-lg border-gray-200" aria-label={t('filterCity', language)}>
+            <SelectTrigger className="flex-1 h-9 text-sm rounded-xl border-gray-200 bg-gray-50/80" aria-label={t('filterCity', language)}>
               <SelectValue placeholder={t('filterCity', language)} />
             </SelectTrigger>
             <SelectContent>
@@ -143,7 +143,7 @@ export default function SearchFilterBar() {
             </SelectContent>
           </Select>
           <Select value={categoryFilter || 'all'} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="flex-1 h-9 text-sm rounded-lg border-gray-200" aria-label={t('filterCategory', language)}>
+            <SelectTrigger className="flex-1 h-9 text-sm rounded-xl border-gray-200 bg-gray-50/80" aria-label={t('filterCategory', language)}>
               <SelectValue placeholder={t('filterCategory', language)} />
             </SelectTrigger>
             <SelectContent>
@@ -167,7 +167,7 @@ export default function SearchFilterBar() {
           {hasActiveFilter && (
             <button
               onClick={clearFilters}
-              className="text-xs text-teal-600 hover:text-teal-700 font-medium whitespace-nowrap shrink-0"
+              className="text-xs text-teal-600 hover:text-teal-700 font-medium whitespace-nowrap shrink-0 transition-colors"
             >
               {isArabic ? 'مسح' : 'Clear'}
             </button>

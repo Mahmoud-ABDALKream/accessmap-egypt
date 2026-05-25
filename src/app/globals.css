@@ -88,18 +88,327 @@
   }
 }
 
-/* Leaflet custom marker styles */
+/* ─── Leaflet base overrides ─────────────────────────────────────────────── */
+
 .custom-marker {
   background: transparent !important;
   border: none !important;
 }
 
-/* Fix Leaflet z-index conflicts with shadcn/ui */
 .leaflet-pane { z-index: 400; }
 .leaflet-top, .leaflet-bottom { z-index: 999; }
 .leaflet-control { z-index: 800; }
+.leaflet-container { font-family: inherit; }
 
-/* Custom scrollbar - thin and subtle */
+/* Less intrusive attribution */
+.map-attribution {
+  font-size: 9px;
+  opacity: 0.5;
+  color: #555;
+}
+.leaflet-control-attribution {
+  background: rgba(255,255,255,0.5) !important;
+  font-size: 9px !important;
+  padding: 1px 4px !important;
+  backdrop-filter: blur(4px);
+}
+
+/* ─── Map Pin Markers ─────────────────────────────────────────────────────── */
+
+.map-pin {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: bottom center;
+}
+
+.map-pin:hover {
+  transform: scale(1.18);
+  z-index: 800 !important;
+}
+
+.map-pin__score {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 800;
+  font-family: system-ui, -apple-system, sans-serif;
+  pointer-events: none;
+  line-height: 1;
+  text-shadow: 0 0.5px 1px rgba(0,0,0,0.3);
+}
+
+/* Selected pin: larger handled via icon size, pulsing ring */
+.map-pin--selected {
+  z-index: 850 !important;
+  filter: brightness(1.1);
+}
+
+.map-pin__pulse {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--pulse-color, #0d9488);
+  opacity: 0;
+  animation: pinPulse 1.5s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes pinPulse {
+  0% { transform: translateX(-50%) scale(0.5); opacity: 0.6; }
+  100% { transform: translateX(-50%) scale(2.2); opacity: 0; }
+}
+
+/* ─── Marker Clusters ─────────────────────────────────────────────────────── */
+
+.custom-cluster {
+  background: transparent !important;
+}
+
+.cluster-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 700;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.4);
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  border: 2.5px solid #fff;
+  transition: transform 0.2s ease;
+}
+
+.cluster-icon:hover {
+  transform: scale(1.12);
+}
+
+.cluster-icon--small {
+  width: 36px;
+  height: 36px;
+  font-size: 12px;
+}
+
+.cluster-icon--medium {
+  width: 42px;
+  height: 42px;
+  font-size: 14px;
+  background: linear-gradient(135deg, #0f766e, #0d9488);
+}
+
+.cluster-icon--large {
+  width: 48px;
+  height: 48px;
+  font-size: 16px;
+  background: linear-gradient(135deg, #115e59, #0f766e);
+}
+
+/* Override MarkerCluster.Default.css styling */
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  background: transparent !important;
+}
+
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+  background: transparent !important;
+}
+
+/* ─── Popup Styling ───────────────────────────────────────────────────────── */
+
+.access-popup-wrapper .leaflet-popup-content-wrapper {
+  border-radius: 16px;
+  padding: 0;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.access-popup-wrapper .leaflet-popup-content {
+  margin: 0 !important;
+  min-width: 220px;
+}
+
+.access-popup-wrapper .leaflet-popup-tip {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.access-popup-wrapper .leaflet-popup-close-button {
+  top: 8px !important;
+  right: 8px !important;
+  width: 22px !important;
+  height: 22px !important;
+  font-size: 16px !important;
+  color: #9ca3af !important;
+  z-index: 10;
+  line-height: 22px !important;
+}
+
+.access-popup-wrapper .leaflet-popup-close-button:hover {
+  color: #374151 !important;
+}
+
+/* Popup inner layout */
+.access-popup {
+  font-family: system-ui, -apple-system, sans-serif;
+  min-width: 220px;
+}
+
+.access-popup__header {
+  padding: 14px 16px 10px;
+  background: linear-gradient(135deg, #f0fdfa, #f0f9ff);
+}
+
+.access-popup__name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.3;
+  padding-right: 20px;
+}
+
+.access-popup__name-ar {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
+  direction: rtl;
+}
+
+.access-popup__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(13, 148, 136, 0.1);
+  color: #0d9488;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.access-popup__score-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #fff;
+}
+
+.access-popup__score-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.access-popup__score-num {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.access-popup__score-label {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.access-popup__bars {
+  padding: 6px 16px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.popup-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.popup-bar-emoji {
+  font-size: 11px;
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.popup-bar-label {
+  font-size: 10px;
+  color: #6b7280;
+  width: 68px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.popup-bar-track {
+  flex: 1;
+  height: 5px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+  min-width: 40px;
+}
+
+.popup-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.popup-bar-val {
+  font-size: 10px;
+  font-weight: 700;
+  color: #374151;
+  width: 22px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.access-popup__btn {
+  display: block;
+  width: calc(100% - 24px);
+  margin: 4px 12px 12px;
+  padding: 8px 0;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.3);
+  font-family: inherit;
+}
+
+.access-popup__btn:hover {
+  background: linear-gradient(135deg, #0f766e, #0d9488);
+  box-shadow: 0 3px 10px rgba(13, 148, 136, 0.4);
+  transform: translateY(-0.5px);
+}
+
+.access-popup__btn:active {
+  transform: translateY(0);
+}
+
+/* ─── Custom scrollbar ────────────────────────────────────────────────────── */
+
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
@@ -115,21 +424,36 @@
   border-radius: 4px;
 }
 
-/* Leaflet container */
-.leaflet-container { font-family: inherit; }
-
 /* Mobile bottom nav safe area */
 .safe-area-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
-/* Override Leaflet popup styles */
-.leaflet-popup-content-wrapper {
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-}
-
 /* Ensure Select dropdowns appear above map */
 [data-radix-popper-content-wrapper] {
   z-index: 9999 !important;
+}
+
+/* ─── Leaflet zoom control polish ─────────────────────────────────────────── */
+
+.leaflet-control-zoom a {
+  width: 34px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  font-size: 16px !important;
+  border-radius: 8px !important;
+  color: #374151 !important;
+  border: none !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important;
+}
+
+.leaflet-control-zoom {
+  border: none !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: #f3f4f6 !important;
 }
