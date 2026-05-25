@@ -18,23 +18,23 @@ function createScoreIcon(score: number): L.DivIcon {
     className: 'custom-marker',
     html: `<div style="
       background-color: ${color};
-      border: 2.5px solid white;
+      border: 3px solid white;
       border-radius: 50%;
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       font-weight: 700;
-      font-size: 11px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+      font-size: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
       cursor: pointer;
       transition: transform 0.15s ease;
     ">${score.toFixed(1)}</div>`,
-    iconSize: [28, 28],
-    iconAnchor: [14, 14],
-    popupAnchor: [0, -16],
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -18],
   });
 }
 
@@ -74,11 +74,13 @@ export default function MapView() {
 
     mapRef.current = map;
 
-    setTimeout(() => {
+    // Important: invalidate size after mount to ensure map renders correctly
+    const timer = setTimeout(() => {
       map.invalidateSize();
-    }, 200);
+    }, 100);
 
     return () => {
+      clearTimeout(timer);
       map.off('click', handleMapClick);
       map.remove();
       mapRef.current = null;
@@ -128,28 +130,28 @@ export default function MapView() {
 
   return (
     <div className="relative w-full h-full">
-      <div ref={mapContainerRef} className="w-full h-full" style={{ minHeight: '300px' }} />
+      <div ref={mapContainerRef} className="w-full h-full absolute inset-0" />
       {currentView === 'submit' && (
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] bg-white rounded-full shadow-md px-3 py-1.5 text-xs font-medium text-teal-700 border border-teal-100">
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] bg-white rounded-full shadow-lg px-4 py-2 text-xs font-medium text-teal-700 border border-teal-200">
           {t('clickMap', language)}
         </div>
       )}
       {/* Map Legend */}
-      <div className="absolute top-3 right-3 z-[1000] bg-white/90 backdrop-blur-sm rounded-lg shadow-sm px-2.5 py-2 border border-gray-100">
-        <p className="text-[10px] font-semibold text-gray-500 mb-1">
+      <div className="absolute top-3 right-3 z-[1000] bg-white/95 backdrop-blur-sm rounded-xl shadow-lg px-3 py-2.5 border border-gray-200">
+        <p className="text-[10px] font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
           {language === 'en' ? 'Accessibility' : 'إمكانية الوصول'}
         </p>
-        <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-          <span className="text-[10px] text-gray-500">{language === 'en' ? 'Low' : 'ضعيف'}</span>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-red-500" />
+          <span className="text-[11px] text-gray-600">{language === 'en' ? 'Low' : 'ضعيف'}</span>
         </div>
-        <div className="flex items-center gap-1.5 mt-0.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-          <span className="text-[10px] text-gray-500">{language === 'en' ? 'Med' : 'متوسط'}</span>
+        <div className="flex items-center gap-2 mt-1">
+          <div className="w-3 h-3 rounded-full bg-yellow-500" />
+          <span className="text-[11px] text-gray-600">{language === 'en' ? 'Medium' : 'متوسط'}</span>
         </div>
-        <div className="flex items-center gap-1.5 mt-0.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
-          <span className="text-[10px] text-gray-500">{language === 'en' ? 'Good' : 'جيد'}</span>
+        <div className="flex items-center gap-2 mt-1">
+          <div className="w-3 h-3 rounded-full bg-green-500" />
+          <span className="text-[11px] text-gray-600">{language === 'en' ? 'Good' : 'جيد'}</span>
         </div>
       </div>
     </div>

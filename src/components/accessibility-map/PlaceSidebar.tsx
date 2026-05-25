@@ -6,7 +6,6 @@ import { t } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Slider } from '@/components/ui/slider';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,8 +18,6 @@ import {
   MessageSquare,
   Star,
   MapPin,
-  Calendar,
-  ChevronRight,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -63,12 +60,10 @@ function formatDate(dateStr: string, lang: 'en' | 'ar') {
   });
 }
 
-function ScoreBar({ label, score, lang }: { label: string; score: number; lang: 'en' | 'ar' }) {
+function ScoreBar({ label, score }: { label: string; score: number }) {
   return (
-    <div className="flex items-center gap-2" role="group" aria-label={`${label}: ${score} out of 5`}>
-      <span className="text-xs text-gray-500 min-w-[90px] truncate">
-        {label}
-      </span>
+    <div className="flex items-center gap-3" role="group" aria-label={`${label}: ${score} out of 5`}>
+      <span className="text-xs text-gray-500 min-w-[100px] truncate">{label}</span>
       <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-500 ${getScoreBg(score)}`}
@@ -79,9 +74,7 @@ function ScoreBar({ label, score, lang }: { label: string; score: number; lang: 
           aria-valuemax={5}
         />
       </div>
-      <span className={`text-xs font-bold min-w-[20px] text-center ${getScoreColor(score)}`}>
-        {score}
-      </span>
+      <span className={`text-xs font-bold min-w-[24px] text-right ${getScoreColor(score)}`}>{score}</span>
     </div>
   );
 }
@@ -92,7 +85,6 @@ export default function PlaceSidebar() {
   const [reviewRating, setReviewRating] = useState(3);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editField, setEditField] = useState('');
-  const [editCurrentValue, setEditCurrentValue] = useState('');
   const [editSuggestedValue, setEditSuggestedValue] = useState('');
   const [editReason, setEditReason] = useState('');
 
@@ -145,14 +137,13 @@ export default function PlaceSidebar() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           field: editField,
-          currentValue: editCurrentValue,
+          currentValue: '',
           suggestedValue: editSuggestedValue,
           reason: editReason,
         }),
       });
       toast.success(t('submitEdit', language));
       setEditField('');
-      setEditCurrentValue('');
       setEditSuggestedValue('');
       setEditReason('');
     } catch {
@@ -160,12 +151,11 @@ export default function PlaceSidebar() {
     }
   };
 
-  // On mobile: bottom sheet. On desktop: right sidebar.
   return (
     <>
       {/* Backdrop for mobile */}
       <div
-        className="fixed inset-0 bg-black/30 z-[1000] sm:hidden"
+        className="fixed inset-0 bg-black/40 z-[1000] sm:hidden"
         onClick={() => setSidebarOpen(false)}
         aria-hidden="true"
       />
@@ -173,26 +163,26 @@ export default function PlaceSidebar() {
       {/* Mobile: Bottom Sheet */}
       <div
         className="fixed bottom-14 left-0 right-0 z-[1001] sm:hidden bg-white rounded-t-2xl shadow-2xl flex flex-col"
-        style={{ maxHeight: '75vh' }}
+        style={{ maxHeight: '70vh' }}
         role="dialog"
         aria-label={t('placeDetails', language)}
       >
         {/* Drag handle */}
         <div className="flex justify-center pt-2 pb-1">
-          <div className="w-8 h-1 bg-gray-300 rounded-full" />
+          <div className="w-10 h-1 bg-gray-300 rounded-full" />
         </div>
 
         {/* Header */}
         <div className="flex items-center justify-between px-4 pb-2">
           <div className="flex items-center gap-2 min-w-0">
-            <span className="text-lg shrink-0">{getCategoryIcon(place.category)}</span>
+            <span className="text-xl shrink-0">{getCategoryIcon(place.category)}</span>
             <h2 className="text-sm font-bold text-gray-800 truncate">{displayName}</h2>
           </div>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setSidebarOpen(false)}
-            className="shrink-0 h-7 w-7"
+            className="shrink-0 h-8 w-8"
             aria-label={t('closeSidebar', language)}
           >
             <X className="h-4 w-4" />
@@ -203,40 +193,45 @@ export default function PlaceSidebar() {
         <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-3">
           {/* Score badge row */}
           <div className="flex items-center gap-2 flex-wrap">
-            <div className={`px-2 py-0.5 rounded-full text-xs font-bold border ${getScoreLabelBg(place.overallScore)}`}>
+            <div className={`px-2.5 py-1 rounded-full text-xs font-bold border ${getScoreLabelBg(place.overallScore)}`}>
               {place.overallScore.toFixed(1)} ★
             </div>
-            <Badge variant="outline" className="text-[10px] gap-0.5 h-5">
+            <Badge variant="outline" className="text-[10px] gap-1 h-5">
               <MapPin className="h-2.5 w-2.5" />
               {place.city === 'alexandria' ? t('filterAlexandria', language) : t('filterCairo', language)}
             </Badge>
           </div>
 
           {/* Breakdown */}
-          <div className="space-y-1.5">
-            <ScoreBar label={t('rampScore', language)} score={place.rampScore} lang={language} />
-            <ScoreBar label={t('elevatorScore', language)} score={place.elevatorScore} lang={language} />
-            <ScoreBar label={t('bathroomScore', language)} score={place.bathroomScore} lang={language} />
-            <ScoreBar label={t('parkingScore', language)} score={place.parkingScore} lang={language} />
-            <ScoreBar label={t('entranceScore', language)} score={place.entranceScore} lang={language} />
+          <div className="space-y-2">
+            <ScoreBar label={t('rampScore', language)} score={place.rampScore} />
+            <ScoreBar label={t('elevatorScore', language)} score={place.elevatorScore} />
+            <ScoreBar label={t('bathroomScore', language)} score={place.bathroomScore} />
+            <ScoreBar label={t('parkingScore', language)} score={place.parkingScore} />
+            <ScoreBar label={t('entranceScore', language)} score={place.entranceScore} />
           </div>
+
+          {/* Description */}
+          {place.reviewText && (
+            <p className="text-xs text-gray-600 leading-relaxed">{place.reviewText}</p>
+          )}
 
           {/* Reviews */}
           {place.reviews && place.reviews.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-gray-600 mb-1.5 flex items-center gap-1">
+              <p className="text-xs font-semibold text-gray-600 mb-2 flex items-center gap-1">
                 <MessageSquare className="h-3 w-3" />
                 {t('reviews', language)} ({place.reviews.length})
               </p>
-              <div className="space-y-1.5 max-h-32 overflow-y-auto">
+              <div className="space-y-2 max-h-32 overflow-y-auto">
                 {place.reviews.map((review) => (
-                  <div key={review.id} className="bg-gray-50 rounded-md p-2">
+                  <div key={review.id} className="bg-gray-50 rounded-lg p-2">
                     <div className="flex items-center gap-1.5 mb-0.5">
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star
                             key={star}
-                            className={`h-2.5 w-2.5 ${
+                            className={`h-3 w-3 ${
                               star <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200'
                             }`}
                           />
@@ -253,11 +248,11 @@ export default function PlaceSidebar() {
             </div>
           )}
 
-          {/* Add Review - compact */}
-          <div className="bg-teal-50 rounded-lg p-2.5 space-y-2">
-            <p className="text-xs font-medium text-teal-700">{t('addReview', language)}</p>
+          {/* Add Review */}
+          <div className="bg-teal-50 rounded-xl p-3 space-y-2">
+            <p className="text-xs font-semibold text-teal-700">{t('addReview', language)}</p>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-teal-600">{t('reviewRating', language)}:</span>
+              <span className="text-[11px] text-teal-600">{t('reviewRating', language)}:</span>
               <div className="flex gap-0.5">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -267,7 +262,7 @@ export default function PlaceSidebar() {
                     aria-label={`${star} star`}
                   >
                     <Star
-                      className={`h-4 w-4 ${
+                      className={`h-5 w-5 ${
                         star <= reviewRating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
                       }`}
                     />
@@ -279,14 +274,14 @@ export default function PlaceSidebar() {
               value={reviewText}
               onChange={(e) => setReviewText(e.target.value)}
               placeholder={t('reviewPlaceholder', language)}
-              className="min-h-[48px] text-xs"
+              className="min-h-[60px] text-sm"
               dir={isArabic ? 'rtl' : 'ltr'}
             />
             <Button
               onClick={handleSubmitReview}
               disabled={!reviewText.trim() || isSubmitting}
               size="sm"
-              className="w-full h-7 text-xs bg-teal-600 hover:bg-teal-700"
+              className="w-full h-8 text-sm bg-teal-600 hover:bg-teal-700"
             >
               {isSubmitting ? t('loading', language) : t('submitReview', language)}
             </Button>
@@ -294,19 +289,14 @@ export default function PlaceSidebar() {
 
           {/* Actions */}
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleShare}
-              className="flex-1 h-7 text-xs gap-1"
-            >
-              <Share2 className="h-3 w-3" />
+            <Button variant="outline" size="sm" onClick={handleShare} className="flex-1 h-8 text-xs gap-1.5">
+              <Share2 className="h-3.5 w-3.5" />
               {t('sharePlace', language)}
             </Button>
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="flex-1 h-7 text-xs gap-1">
-                  <PenLine className="h-3 w-3" />
+                <Button variant="outline" size="sm" className="flex-1 h-8 text-xs gap-1.5">
+                  <PenLine className="h-3.5 w-3.5" />
                   {t('suggestEdit', language)}
                 </Button>
               </DialogTrigger>
@@ -314,13 +304,11 @@ export default function PlaceSidebar() {
                 <DialogHeader>
                   <DialogTitle className="text-sm">{t('suggestEdit', language)}</DialogTitle>
                 </DialogHeader>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <div>
                     <Label className="text-xs">{t('editField', language)}</Label>
                     <Select value={editField} onValueChange={setEditField}>
-                      <SelectTrigger className="h-8 text-xs">
-                        <SelectValue placeholder={t('editField', language)} />
-                      </SelectTrigger>
+                      <SelectTrigger className="h-9 text-sm"><SelectValue placeholder={t('editField', language)} /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="name">Name</SelectItem>
                         <SelectItem value="category">Category</SelectItem>
@@ -339,7 +327,7 @@ export default function PlaceSidebar() {
                       value={editSuggestedValue}
                       onChange={(e) => setEditSuggestedValue(e.target.value)}
                       placeholder={t('editSuggestedValue', language)}
-                      className="h-8 text-xs"
+                      className="h-9 text-sm"
                     />
                   </div>
                   <div>
@@ -348,16 +336,16 @@ export default function PlaceSidebar() {
                       value={editReason}
                       onChange={(e) => setEditReason(e.target.value)}
                       placeholder={t('editReasonPlaceholder', language)}
-                      className="min-h-[48px] text-xs"
+                      className="min-h-[60px] text-sm"
                       dir={isArabic ? 'rtl' : 'ltr'}
                     />
                   </div>
                 </div>
                 <DialogFooter className="gap-2">
                   <DialogClose asChild>
-                    <Button variant="outline" size="sm" className="text-xs">{t('cancel', language)}</Button>
+                    <Button variant="outline" size="sm" className="text-sm">{t('cancel', language)}</Button>
                   </DialogClose>
-                  <Button onClick={handleSubmitEdit} size="sm" className="text-xs bg-teal-600 hover:bg-teal-700">
+                  <Button onClick={handleSubmitEdit} size="sm" className="text-sm bg-teal-600 hover:bg-teal-700">
                     {t('submitEdit', language)}
                   </Button>
                 </DialogFooter>
@@ -369,7 +357,7 @@ export default function PlaceSidebar() {
 
       {/* Desktop: Right Sidebar */}
       <div
-        className={`hidden sm:flex fixed top-12 ${isArabic ? 'left-0' : 'right-0'} h-[calc(100dvh-48px)] w-[380px] bg-white shadow-xl z-[1001] flex-col transition-transform duration-300 ease-out ${
+        className={`hidden sm:flex fixed top-12 ${isArabic ? 'left-0' : 'right-0'} h-[calc(100dvh-48px-32px)] w-[380px] bg-white shadow-2xl z-[1001] flex-col transition-transform duration-300 ease-out ${
           sidebarOpen
             ? 'translate-x-0'
             : isArabic
@@ -380,16 +368,17 @@ export default function PlaceSidebar() {
         aria-label={t('placeDetails', language)}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-xl shrink-0">{getCategoryIcon(place.category)}</span>
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 shrink-0">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="text-2xl shrink-0">{getCategoryIcon(place.category)}</span>
             <div className="min-w-0">
               <h2 className="text-sm font-bold text-gray-800 truncate">{displayName}</h2>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <div className={`px-1.5 py-0 rounded text-[10px] font-bold ${getScoreLabelBg(place.overallScore)}`}>
+              <div className="flex items-center gap-2 mt-0.5">
+                <div className={`px-2 py-0.5 rounded text-[10px] font-bold ${getScoreLabelBg(place.overallScore)}`}>
                   {place.overallScore.toFixed(1)}
                 </div>
-                <span className="text-[10px] text-gray-400">
+                <span className="text-[11px] text-gray-400 flex items-center gap-0.5">
+                  <MapPin className="h-3 w-3" />
                   {place.city === 'alexandria' ? t('filterAlexandria', language) : t('filterCairo', language)}
                 </span>
               </div>
@@ -399,7 +388,7 @@ export default function PlaceSidebar() {
             variant="ghost"
             size="icon"
             onClick={() => setSidebarOpen(false)}
-            className="shrink-0 h-7 w-7 text-gray-400 hover:text-gray-600"
+            className="shrink-0 h-8 w-8 text-gray-400 hover:text-gray-600"
             aria-label={t('closeSidebar', language)}
           >
             <X className="h-4 w-4" />
@@ -410,9 +399,9 @@ export default function PlaceSidebar() {
         <div className="flex-1 overflow-y-auto">
           <div className="p-4 space-y-4" dir={isArabic ? 'rtl' : 'ltr'}>
             {/* Overall Score */}
-            <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+            <div className="flex items-center gap-4 bg-gray-50 rounded-xl p-4">
               <div
-                className={`w-14 h-14 rounded-full flex items-center justify-center text-white text-lg font-bold ${getScoreBg(place.overallScore)}`}
+                className={`w-16 h-16 rounded-full flex items-center justify-center text-white text-xl font-bold ${getScoreBg(place.overallScore)}`}
                 role="img"
                 aria-label={`${t('overallScore', language)}: ${place.overallScore.toFixed(1)}`}
               >
@@ -421,20 +410,22 @@ export default function PlaceSidebar() {
               <div>
                 <p className="text-xs text-gray-500">{t('overallScore', language)}</p>
                 <p className={`text-sm font-semibold ${getScoreColor(place.overallScore)}`}>
-                  {t(`score${Math.round(place.overallScore)}` as keyof typeof import('@/lib/i18n').translations.en, language)}
+                  {place.overallScore >= 4 ? (language === 'en' ? 'Good Access' : 'وصول جيد') :
+                   place.overallScore >= 2.5 ? (language === 'en' ? 'Moderate Access' : 'وصول متوسط') :
+                   (language === 'en' ? 'Poor Access' : 'وصول ضعيف')}
                 </p>
               </div>
             </div>
 
             {/* Breakdown */}
             <div>
-              <p className="text-xs font-semibold text-gray-500 mb-2">{t('breakdownScores', language)}</p>
-              <div className="space-y-2">
-                <ScoreBar label={t('rampScore', language)} score={place.rampScore} lang={language} />
-                <ScoreBar label={t('elevatorScore', language)} score={place.elevatorScore} lang={language} />
-                <ScoreBar label={t('bathroomScore', language)} score={place.bathroomScore} lang={language} />
-                <ScoreBar label={t('parkingScore', language)} score={place.parkingScore} lang={language} />
-                <ScoreBar label={t('entranceScore', language)} score={place.entranceScore} lang={language} />
+              <p className="text-xs font-semibold text-gray-500 mb-3 uppercase tracking-wider">{t('breakdownScores', language)}</p>
+              <div className="space-y-2.5">
+                <ScoreBar label={t('rampScore', language)} score={place.rampScore} />
+                <ScoreBar label={t('elevatorScore', language)} score={place.elevatorScore} />
+                <ScoreBar label={t('bathroomScore', language)} score={place.bathroomScore} />
+                <ScoreBar label={t('parkingScore', language)} score={place.parkingScore} />
+                <ScoreBar label={t('entranceScore', language)} score={place.entranceScore} />
               </div>
             </div>
 
@@ -443,7 +434,7 @@ export default function PlaceSidebar() {
               <img
                 src={place.photoPath}
                 alt={displayName}
-                className="w-full h-36 object-cover rounded-lg"
+                className="w-full h-40 object-cover rounded-lg"
               />
             )}
 
@@ -497,11 +488,11 @@ export default function PlaceSidebar() {
             <div className="bg-teal-50/80 rounded-xl p-3 space-y-2">
               <p className="text-xs font-semibold text-teal-700">{t('addReview', language)}</p>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] text-teal-600">{t('reviewRating', language)}:</span>
+                <span className="text-[11px] text-teal-600">{t('reviewRating', language)}:</span>
                 <div className="flex gap-0.5">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button key={star} onClick={() => setReviewRating(star)} className="p-0" aria-label={`${star}`}>
-                      <Star className={`h-4 w-4 ${star <= reviewRating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+                      <Star className={`h-5 w-5 ${star <= reviewRating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
                     </button>
                   ))}
                 </div>
@@ -510,14 +501,14 @@ export default function PlaceSidebar() {
                 value={reviewText}
                 onChange={(e) => setReviewText(e.target.value)}
                 placeholder={t('reviewPlaceholder', language)}
-                className="min-h-[60px] text-xs"
+                className="min-h-[60px] text-sm"
                 dir={isArabic ? 'rtl' : 'ltr'}
               />
               <Button
                 onClick={handleSubmitReview}
                 disabled={!reviewText.trim() || isSubmitting}
                 size="sm"
-                className="w-full h-8 text-xs bg-teal-600 hover:bg-teal-700"
+                className="w-full h-8 text-sm bg-teal-600 hover:bg-teal-700"
               >
                 {isSubmitting ? t('loading', language) : t('submitReview', language)}
               </Button>
@@ -527,14 +518,14 @@ export default function PlaceSidebar() {
 
             {/* Actions */}
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={handleShare} className="flex-1 h-8 text-xs gap-1.5">
-                <Share2 className="h-3 w-3" />
+              <Button variant="outline" size="sm" onClick={handleShare} className="flex-1 h-9 text-sm gap-1.5">
+                <Share2 className="h-3.5 w-3.5" />
                 {t('sharePlace', language)}
               </Button>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline" size="sm" className="flex-1 h-8 text-xs gap-1.5">
-                    <PenLine className="h-3 w-3" />
+                  <Button variant="outline" size="sm" className="flex-1 h-9 text-sm gap-1.5">
+                    <PenLine className="h-3.5 w-3.5" />
                     {t('suggestEdit', language)}
                   </Button>
                 </DialogTrigger>
@@ -542,11 +533,11 @@ export default function PlaceSidebar() {
                   <DialogHeader>
                     <DialogTitle className="text-sm">{t('suggestEdit', language)}</DialogTitle>
                   </DialogHeader>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <div>
                       <Label className="text-xs">{t('editField', language)}</Label>
                       <Select value={editField} onValueChange={setEditField}>
-                        <SelectTrigger className="h-8 text-xs"><SelectValue placeholder={t('editField', language)} /></SelectTrigger>
+                        <SelectTrigger className="h-9 text-sm"><SelectValue placeholder={t('editField', language)} /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="name">Name</SelectItem>
                           <SelectItem value="category">Category</SelectItem>
@@ -561,16 +552,16 @@ export default function PlaceSidebar() {
                     </div>
                     <div>
                       <Label className="text-xs">{t('editSuggestedValue', language)}</Label>
-                      <Input value={editSuggestedValue} onChange={(e) => setEditSuggestedValue(e.target.value)} className="h-8 text-xs" />
+                      <Input value={editSuggestedValue} onChange={(e) => setEditSuggestedValue(e.target.value)} className="h-9 text-sm" />
                     </div>
                     <div>
                       <Label className="text-xs">{t('editReason', language)}</Label>
-                      <Textarea value={editReason} onChange={(e) => setEditReason(e.target.value)} className="min-h-[48px] text-xs" dir={isArabic ? 'rtl' : 'ltr'} />
+                      <Textarea value={editReason} onChange={(e) => setEditReason(e.target.value)} className="min-h-[60px] text-sm" dir={isArabic ? 'rtl' : 'ltr'} />
                     </div>
                   </div>
                   <DialogFooter className="gap-2">
-                    <DialogClose asChild><Button variant="outline" size="sm" className="text-xs">{t('cancel', language)}</Button></DialogClose>
-                    <Button onClick={handleSubmitEdit} size="sm" className="text-xs bg-teal-600 hover:bg-teal-700">{t('submitEdit', language)}</Button>
+                    <DialogClose asChild><Button variant="outline" size="sm" className="text-sm">{t('cancel', language)}</Button></DialogClose>
+                    <Button onClick={handleSubmitEdit} size="sm" className="text-sm bg-teal-600 hover:bg-teal-700">{t('submitEdit', language)}</Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>

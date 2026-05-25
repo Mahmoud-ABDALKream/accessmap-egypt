@@ -94,7 +94,7 @@
   border: none !important;
 }
 
-/* Fix Leaflet z-index */
+/* Fix Leaflet z-index conflicts with shadcn/ui */
 .leaflet-pane { z-index: 400; }
 .leaflet-top, .leaflet-bottom { z-index: 999; }
 .leaflet-control { z-index: 800; }
@@ -123,13 +123,13 @@
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
-/* Smooth transitions */
-.transition-sidebar {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 /* Override Leaflet popup styles */
 .leaflet-popup-content-wrapper {
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+/* Ensure Select dropdowns appear above map */
+[data-radix-popper-content-wrapper] {
+  z-index: 9999 !important;
 }
