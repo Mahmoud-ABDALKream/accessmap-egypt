@@ -6,21 +6,10 @@ import 'leaflet/dist/leaflet.css';
 import { useAppStore } from '@/lib/store';
 import { t } from '@/lib/i18n';
 
-// Fix Leaflet default marker icon issue
-const defaultIcon = L.icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
-
 function getScoreColor(score: number): string {
-  if (score >= 4) return '#22c55e'; // green
-  if (score >= 2.5) return '#eab308'; // yellow
-  return '#ef4444'; // red
+  if (score >= 4) return '#16a34a'; // green
+  if (score >= 2.5) return '#ca8a04'; // yellow/amber
+  return '#dc2626'; // red
 }
 
 function createScoreIcon(score: number): L.DivIcon {
@@ -29,22 +18,23 @@ function createScoreIcon(score: number): L.DivIcon {
     className: 'custom-marker',
     html: `<div style="
       background-color: ${color};
-      border: 3px solid white;
+      border: 2.5px solid white;
       border-radius: 50%;
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-weight: bold;
-      font-size: 13px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      font-weight: 700;
+      font-size: 11px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
       cursor: pointer;
+      transition: transform 0.15s ease;
     ">${score.toFixed(1)}</div>`,
-    iconSize: [32, 32],
-    iconAnchor: [16, 16],
-    popupAnchor: [0, -20],
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -16],
   });
 }
 
@@ -66,9 +56,12 @@ export default function MapView() {
     const map = L.map(mapContainerRef.current, {
       center: [31.2001, 29.9187], // Alexandria
       zoom: 13,
-      zoomControl: true,
+      zoomControl: false,
       scrollWheelZoom: true,
     });
+
+    // Add zoom control to bottom-left
+    L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -81,10 +74,9 @@ export default function MapView() {
 
     mapRef.current = map;
 
-    // Force a resize after mount to fix any rendering issues
     setTimeout(() => {
       map.invalidateSize();
-    }, 100);
+    }, 200);
 
     return () => {
       map.off('click', handleMapClick);
@@ -136,12 +128,30 @@ export default function MapView() {
 
   return (
     <div className="relative w-full h-full">
-      <div ref={mapContainerRef} className="w-full h-full" style={{ minHeight: '400px' }} />
+      <div ref={mapContainerRef} className="w-full h-full" style={{ minHeight: '300px' }} />
       {currentView === 'submit' && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-white rounded-lg shadow-lg px-4 py-2 text-sm font-medium text-teal-700 border border-teal-200">
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] bg-white rounded-full shadow-md px-3 py-1.5 text-xs font-medium text-teal-700 border border-teal-100">
           {t('clickMap', language)}
         </div>
       )}
+      {/* Map Legend */}
+      <div className="absolute top-3 right-3 z-[1000] bg-white/90 backdrop-blur-sm rounded-lg shadow-sm px-2.5 py-2 border border-gray-100">
+        <p className="text-[10px] font-semibold text-gray-500 mb-1">
+          {language === 'en' ? 'Accessibility' : 'إمكانية الوصول'}
+        </p>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+          <span className="text-[10px] text-gray-500">{language === 'en' ? 'Low' : 'ضعيف'}</span>
+        </div>
+        <div className="flex items-center gap-1.5 mt-0.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+          <span className="text-[10px] text-gray-500">{language === 'en' ? 'Med' : 'متوسط'}</span>
+        </div>
+        <div className="flex items-center gap-1.5 mt-0.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+          <span className="text-[10px] text-gray-500">{language === 'en' ? 'Good' : 'جيد'}</span>
+        </div>
+      </div>
     </div>
   );
 }
