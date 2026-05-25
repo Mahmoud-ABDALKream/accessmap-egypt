@@ -94,6 +94,12 @@ interface AppState {
   setIsLoading: (loading: boolean) => void;
 }
 
+// Helper to safely parse API response as array
+function ensureArray<T>(data: unknown): T[] {
+  if (Array.isArray(data)) return data;
+  return [];
+}
+
 export const useAppStore = create<AppState>((set, get) => ({
   // View
   currentView: 'map',
@@ -114,10 +120,14 @@ export const useAppStore = create<AppState>((set, get) => ({
       if (filters?.city) params.set('city', filters.city);
       if (filters?.category) params.set('category', filters.category);
       const res = await fetch(`/api/places?${params.toString()}`);
+      if (!res.ok) {
+        set({ places: [], isLoading: false });
+        return;
+      }
       const data = await res.json();
-      set({ places: data, isLoading: false });
+      set({ places: ensureArray<PlaceData>(data), isLoading: false });
     } catch {
-      set({ isLoading: false });
+      set({ places: [], isLoading: false });
     }
   },
 
@@ -145,8 +155,20 @@ export const useAppStore = create<AppState>((set, get) => ({
   fetchStats: async () => {
     try {
       const res = await fetch('/api/stats');
+      if (!res.ok) return;
       const data = await res.json();
-      set({ stats: data });
+      // Ensure the stats object has the correct shape
+      if (data && typeof data === 'object' && !data.error) {
+        set({
+          stats: {
+            totalPlaces: data.totalPlaces ?? 0,
+            totalReviews: data.totalReviews ?? 0,
+            averageScore: data.averageScore ?? 0,
+            scoresByCategory: ensureArray(data.scoresByCategory),
+            recentPlaces: ensureArray(data.recentPlaces),
+          },
+        });
+      }
     } catch {
       // ignore
     }

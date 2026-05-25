@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// NOTE: For Vercel deployment, SQLite is not supported.
+// The app uses fallback static data when the database is unavailable.
+// Set DATABASE_URL environment variable on Vercel to any valid SQLite path
+// (e.g., "file:./dev.db") just so Prisma Client can be generated.
+
 model Place {
   id            String   @id @default(cuid())
   name          String

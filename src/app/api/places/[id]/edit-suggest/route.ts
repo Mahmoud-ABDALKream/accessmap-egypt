@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
 
 export async function POST(
   request: NextRequest,
@@ -17,25 +16,34 @@ export async function POST(
       );
     }
 
-    const place = await db.place.findUnique({ where: { id } });
-    if (!place) {
+    try {
+      const { db } = await import('@/lib/db');
+
+      const place = await db.place.findUnique({ where: { id } });
+      if (!place) {
+        return NextResponse.json(
+          { error: 'Place not found' },
+          { status: 404 }
+        );
+      }
+
+      const editSuggestion = await db.editSuggestion.create({
+        data: {
+          placeId: id,
+          field,
+          currentValue: String(currentValue),
+          suggestedValue: String(suggestedValue),
+          reason,
+        },
+      });
+
+      return NextResponse.json(editSuggestion, { status: 201 });
+    } catch {
       return NextResponse.json(
-        { error: 'Place not found' },
-        { status: 404 }
+        { error: 'Database not available. Edit suggestions are not accepted in demo mode.' },
+        { status: 503 }
       );
     }
-
-    const editSuggestion = await db.editSuggestion.create({
-      data: {
-        placeId: id,
-        field,
-        currentValue: String(currentValue),
-        suggestedValue: String(suggestedValue),
-        reason,
-      },
-    });
-
-    return NextResponse.json(editSuggestion, { status: 201 });
   } catch (error) {
     console.error('Error creating edit suggestion:', error);
     return NextResponse.json(
