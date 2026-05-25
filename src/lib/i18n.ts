@@ -1,0 +1,296 @@
+export type Language = 'en' | 'ar';
+
+export const translations = {
+  en: {
+    // App
+    appName: 'AccessMap Egypt',
+    appTagline: 'Discover & rate accessibility of public places in Egypt',
+
+    // Navigation
+    navMap: 'Map',
+    navSubmit: 'Submit Place',
+    navStats: 'Statistics',
+    navAbout: 'About',
+    navAdmin: 'Admin',
+
+    // Map
+    mapCenterAlex: 'Alexandria',
+    mapCenterCairo: 'Cairo',
+
+    // Search & Filter
+    searchPlaceholder: 'Search places by name or category...',
+    filterCity: 'City',
+    filterCategory: 'Category',
+    filterAll: 'All',
+    filterAlexandria: 'Alexandria',
+    filterCairo: 'Cairo',
+    filterMosque: 'Mosque',
+    filterHospital: 'Hospital',
+    filterCafe: 'Cafe',
+    filterSchool: 'School',
+    filterGovernment: 'Government',
+    filterTransport: 'Transport',
+    filterOther: 'Other',
+
+    // Place Sidebar
+    placeDetails: 'Place Details',
+    overallScore: 'Overall Score',
+    breakdownScores: 'Accessibility Breakdown',
+    rampScore: 'Entrance Ramp',
+    elevatorScore: 'Elevator',
+    bathroomScore: 'Accessible Bathroom',
+    parkingScore: 'Accessible Parking',
+    entranceScore: 'Wide Doorways',
+    reviews: 'Reviews',
+    noReviews: 'No reviews yet',
+    addReview: 'Add Review',
+    reviewPlaceholder: 'Write your review...',
+    reviewRating: 'Rating',
+    submitReview: 'Submit Review',
+    suggestEdit: 'Suggest an Edit',
+    sharePlace: 'Share',
+    linkCopied: 'Link copied to clipboard!',
+    closeSidebar: 'Close',
+
+    // Suggest Edit Modal
+    editField: 'Field to Edit',
+    editCurrentValue: 'Current Value',
+    editSuggestedValue: 'Suggested Value',
+    editReason: 'Reason for Edit',
+    editReasonPlaceholder: 'Why is this correction needed?',
+    submitEdit: 'Submit Suggestion',
+
+    // Submit Form
+    submitTitle: 'Submit a New Place',
+    submitSubtitle: 'Help the community by adding accessibility information about a public place',
+    placeName: 'Place Name',
+    placeNameAr: 'Place Name (Arabic)',
+    placeNamePlaceholder: 'e.g., Cairo Central Hospital',
+    placeNameArPlaceholder: 'e.g., مستشفى القاهرة المركزي',
+    placeCategory: 'Category',
+    selectCategory: 'Select category...',
+    placeCity: 'City',
+    selectCity: 'Select city...',
+    placeLocation: 'Location',
+    googleMapsLink: 'Google Maps Link',
+    googleMapsPlaceholder: 'Paste a Google Maps link or enter coordinates',
+    orEnterCoords: 'Or enter coordinates manually',
+    latitude: 'Latitude',
+    longitude: 'Longitude',
+    clickMap: 'Click on the map to set location',
+    accessibilityScores: 'Accessibility Scores',
+    scoreLabel: 'Rate from 0 (none) to 5 (excellent)',
+    reviewTextLabel: 'Your Review',
+    reviewTextPlaceholder: 'Describe the accessibility features and issues...',
+    photoUpload: 'Photo (optional)',
+    photoDropzone: 'Click to upload or drag and drop',
+    photoFormats: 'PNG, JPG up to 5MB',
+    submitPlace: 'Submit Place',
+    submitSuccess: 'Place submitted successfully! It will appear on the map after admin approval.',
+    submitError: 'Failed to submit place. Please try again.',
+
+    // Stats
+    statsTitle: 'Accessibility Statistics',
+    statsTotalPlaces: 'Total Places Rated',
+    statsTotalReviews: 'Total Reviews',
+    statsAvgScore: 'Average Overall Score',
+    statsByCategory: 'Average Score by Category',
+    statsRecentPlaces: 'Recently Added Places',
+    statsNoData: 'No data available yet',
+
+    // About
+    aboutTitle: 'About AccessMap Egypt',
+    aboutMission: 'Our Mission',
+    aboutMissionText: 'AccessMap Egypt is a crowdsourced platform dedicated to mapping the physical accessibility of public places in Alexandria and Cairo for people with mobility, visual, and wheelchair-related disabilities.',
+    aboutHowItWorks: 'How It Works',
+    aboutHowItWorksText1: 'Anyone can search for and view accessibility information about public places on our interactive map.',
+    aboutHowItWorksText2: 'Community members can submit new places and rate existing ones on five key accessibility criteria.',
+    aboutHowItWorksText3: 'All submissions are reviewed before publication to ensure accuracy and quality.',
+    aboutHowItWorksText4: 'The growing database helps people with disabilities plan their visits and advocate for better accessibility.',
+    aboutCriteria: 'Accessibility Criteria',
+    aboutRamp: 'Entrance Ramp — Is there a wheelchair ramp at the entrance?',
+    aboutElevator: 'Elevator — Are there accessible elevators in multi-story buildings?',
+    aboutBathroom: 'Accessible Bathroom — Are there wheelchair-accessible restrooms?',
+    aboutParking: 'Accessible Parking — Are there designated accessible parking spaces?',
+    aboutDoorways: 'Wide Doorways — Are doorways wide enough for wheelchair access?',
+    aboutContribute: 'Contribute',
+    aboutContributeText: 'Every submission helps build a more inclusive Egypt. Whether you use a wheelchair yourself, care for someone who does, or simply want to help — your contributions matter. No login required.',
+    aboutDisclaimer: 'This is a community-driven project. All data is submitted by volunteers and should be verified independently before making travel plans.',
+
+    // Admin
+    adminTitle: 'Admin Panel',
+    adminPassword: 'Admin Password',
+    adminPasswordPlaceholder: 'Enter admin password',
+    adminLogin: 'Login',
+    adminUnapproved: 'Unapproved Submissions',
+    adminNoPending: 'No pending submissions',
+    adminApprove: 'Approve',
+    adminDelete: 'Delete',
+    adminWrongPassword: 'Incorrect password',
+
+    // Score labels
+    score0: 'No access',
+    score1: 'Very poor',
+    score2: 'Poor',
+    score3: 'Moderate',
+    score4: 'Good',
+    score5: 'Excellent',
+
+    // Common
+    loading: 'Loading...',
+    error: 'An error occurred',
+    cancel: 'Cancel',
+    save: 'Save',
+    delete: 'Delete',
+    close: 'Close',
+  },
+  ar: {
+    // App
+    appName: 'خريطة الوصول مصر',
+    appTagline: 'اكتشف وقيّم إمكانية الوصول للأماكن العامة في مصر',
+
+    // Navigation
+    navMap: 'الخريطة',
+    navSubmit: 'إضافة مكان',
+    navStats: 'الإحصائيات',
+    navAbout: 'عن المشروع',
+    navAdmin: 'الإدارة',
+
+    // Map
+    mapCenterAlex: 'الإسكندرية',
+    mapCenterCairo: 'القاهرة',
+
+    // Search & Filter
+    searchPlaceholder: 'ابحث عن مكان بالاسم أو الفئة...',
+    filterCity: 'المدينة',
+    filterCategory: 'الفئة',
+    filterAll: 'الكل',
+    filterAlexandria: 'الإسكندرية',
+    filterCairo: 'القاهرة',
+    filterMosque: 'مسجد',
+    filterHospital: 'مستشفى',
+    filterCafe: 'مقهى',
+    filterSchool: 'مدرسة',
+    filterGovernment: 'مبنى حكومي',
+    filterTransport: 'مواصلات',
+    filterOther: 'أخرى',
+
+    // Place Sidebar
+    placeDetails: 'تفاصيل المكان',
+    overallScore: 'التقييم العام',
+    breakdownScores: 'تفاصيل إمكانية الوصول',
+    rampScore: 'منحدر مدخل',
+    elevatorScore: 'مصعد',
+    bathroomScore: 'حمام متاح',
+    parkingScore: 'موقف سيارات متاح',
+    entranceScore: 'أبواب واسعة',
+    reviews: 'التقييمات',
+    noReviews: 'لا توجد تقييمات بعد',
+    addReview: 'أضف تقييم',
+    reviewPlaceholder: 'اكتب تقييمك...',
+    reviewRating: 'التقييم',
+    submitReview: 'إرسال التقييم',
+    suggestEdit: 'اقتراح تعديل',
+    sharePlace: 'مشاركة',
+    linkCopied: 'تم نسخ الرابط!',
+    closeSidebar: 'إغلاق',
+
+    // Suggest Edit Modal
+    editField: 'الحقل المراد تعديله',
+    editCurrentValue: 'القيمة الحالية',
+    editSuggestedValue: 'القيمة المقترحة',
+    editReason: 'سبب التعديل',
+    editReasonPlaceholder: 'لماذا هذا التصحيح ضروري؟',
+    submitEdit: 'إرسال الاقتراح',
+
+    // Submit Form
+    submitTitle: 'إضافة مكان جديد',
+    submitSubtitle: 'ساعد المجتمع بإضافة معلومات إمكانية الوصول عن مكان عام',
+    placeName: 'اسم المكان',
+    placeNameAr: 'اسم المكان (بالعربي)',
+    placeNamePlaceholder: 'مثال: مستشفى القاهرة المركزي',
+    placeNameArPlaceholder: 'مثال: مستشفى القاهرة المركزي',
+    placeCategory: 'الفئة',
+    selectCategory: 'اختر الفئة...',
+    placeCity: 'المدينة',
+    selectCity: 'اختر المدينة...',
+    placeLocation: 'الموقع',
+    googleMapsLink: 'رابط خرائط جوجل',
+    googleMapsPlaceholder: 'الصق رابط خرائط جوجل أو أدخل الإحداثيات',
+    orEnterCoords: 'أو أدخل الإحداثيات يدوياً',
+    latitude: 'خط العرض',
+    longitude: 'خط الطول',
+    clickMap: 'انقر على الخريطة لتحديد الموقع',
+    accessibilityScores: 'تقييمات إمكانية الوصول',
+    scoreLabel: 'قيّم من ٠ (غير متاح) إلى ٥ (ممتاز)',
+    reviewTextLabel: 'تقييمك',
+    reviewTextPlaceholder: 'صف ميزات ومشاكل إمكانية الوصول...',
+    photoUpload: 'صورة (اختياري)',
+    photoDropzone: 'انقر للتحميل أو اسحب وأفلت',
+    photoFormats: 'PNG, JPG حتى ٥ ميجابايت',
+    submitPlace: 'إرسال المكان',
+    submitSuccess: 'تم إرسال المكان بنجاح! سيظهر على الخريطة بعد موافقة الإدارة.',
+    submitError: 'فشل إرسال المكان. يرجى المحاولة مرة أخرى.',
+
+    // Stats
+    statsTitle: 'إحصائيات إمكانية الوصول',
+    statsTotalPlaces: 'إجمالي الأماكن المقيمة',
+    statsTotalReviews: 'إجمالي التقييمات',
+    statsAvgScore: 'متوسط التقييم العام',
+    statsByCategory: 'متوسط التقييم حسب الفئة',
+    statsRecentPlaces: 'الأماكن المضافة مؤخراً',
+    statsNoData: 'لا توجد بيانات بعد',
+
+    // About
+    aboutTitle: 'عن خريطة الوصول مصر',
+    aboutMission: 'مهمتنا',
+    aboutMissionText: 'خريطة الوصول مصر هي منصة تعتمد على المساهمة الجماعية لرسم خريطة إمكانية الوصول المادي للأماكن العامة في الإسكندرية والقاهرة للأشخاص ذوي الإعاقات الحركية والبصرية وذوي الكراسي المتحركة.',
+    aboutHowItWorks: 'كيف يعمل',
+    aboutHowItWorksText1: 'يمكن لأي شخص البحث عن معلومات إمكانية الوصول ومشاهدتها على خريطتنا التفاعلية.',
+    aboutHowItWorksText2: 'يمكن لأعضاء المجتمع إضافة أماكن جديدة وتقييم الأماكن الحالية وفق خمسة معايير رئيسية.',
+    aboutHowItWorksText3: 'يتم مراجعة جميع المساهمات قبل النشر لضمان الدقة والجودة.',
+    aboutHowItWorksText4: 'تساعد قاعدة البيانات المتنامية الأشخاص ذوي الإعاقة في التخطيط لزياراتهم والدفاع عن إمكانية وصول أفضل.',
+    aboutCriteria: 'معايير إمكانية الوصول',
+    aboutRamp: 'منحدر المدخل — هل يوجد منحدر للكراسي المتحركة عند المدخل؟',
+    aboutElevator: 'مصعد — هل توجد مصاعد متاحة في المباني متعددة الطوابق؟',
+    aboutBathroom: 'حمام متاح — هل توجد دورات مياه متاحة للكراسي المتحركة؟',
+    aboutParking: 'موقف سيارات متاح — هل توجد أماكن وقوف مخصصة لذوي الإعاقة؟',
+    aboutDoorways: 'أبواب واسعة — هل الأبواب واسعة بما يكفي لمرور الكراسي المتحركة؟',
+    aboutContribute: 'ساهم',
+    aboutContributeText: 'كل مساهمة تساعد في بناء مصر أكثر شمولاً. سواء كنت تستخدم كرسياً متحركاً بنفسك، أو تعتني بشخص يفعل ذلك، أو تريد ببساطة المساعدة — مساهماتك مهمة. لا يلزم تسجيل الدخول.',
+    aboutDisclaimer: 'هذا مشروع قائم على المجتمع. جميع البيانات مقدمة من متطوعين ويجب التحقق منها بشكل مستقل قبل وضع خطط السفر.',
+
+    // Admin
+    adminTitle: 'لوحة الإدارة',
+    adminPassword: 'كلمة مرور الإدارة',
+    adminPasswordPlaceholder: 'أدخل كلمة مرور الإدارة',
+    adminLogin: 'تسجيل الدخول',
+    adminUnapproved: 'المساهمات غير المعتمدة',
+    adminNoPending: 'لا توجد مساهمات معلقة',
+    adminApprove: 'اعتماد',
+    adminDelete: 'حذف',
+    adminWrongPassword: 'كلمة المرور غير صحيحة',
+
+    // Score labels
+    score0: 'غير متاح',
+    score1: 'سيء جداً',
+    score2: 'سيء',
+    score3: 'متوسط',
+    score4: 'جيد',
+    score5: 'ممتاز',
+
+    // Common
+    loading: 'جاري التحميل...',
+    error: 'حدث خطأ',
+    cancel: 'إلغاء',
+    save: 'حفظ',
+    delete: 'حذف',
+    close: 'إغلاق',
+  },
+} as const;
+
+export type TranslationKey = keyof typeof translations.en;
+
+export function t(key: TranslationKey, lang: Language): string {
+  return translations[lang][key] || translations.en[key] || key;
+}
