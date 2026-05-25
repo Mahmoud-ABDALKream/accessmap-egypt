@@ -9,15 +9,17 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Upload, CheckCircle, AlertCircle, ChevronLeft } from 'lucide-react';
+import { Upload, CheckCircle, AlertCircle, ChevronLeft } from 'lucide-react';
 import { toast } from 'sonner';
 
 function ScoreSlider({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {
   return (
-    <div className="space-y-1">
+    <div className="space-y-1.5">
       <div className="flex justify-between items-center">
-        <Label className="text-xs text-gray-600">{label}</Label>
-        <span className={`text-xs font-bold min-w-[24px] text-right ${value >= 4 ? 'text-green-600' : value >= 2.5 ? 'text-yellow-600' : value > 0 ? 'text-red-500' : 'text-gray-300'}`}>
+        <Label className="text-sm text-gray-700">{label}</Label>
+        <span className={`text-sm font-bold min-w-[28px] text-right ${
+          value >= 4 ? 'text-green-600' : value >= 2.5 ? 'text-yellow-600' : value > 0 ? 'text-red-500' : 'text-gray-300'
+        }`}>
           {value}/5
         </span>
       </div>
@@ -108,13 +110,14 @@ export default function SubmitForm() {
   if (submitSuccess) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] p-6" dir={isArabic ? 'rtl' : 'ltr'}>
-        <div className="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mb-3">
-          <CheckCircle className="h-7 w-7 text-green-500" />
+        <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-4">
+          <CheckCircle className="h-8 w-8 text-green-500" />
         </div>
-        <h2 className="text-lg font-bold text-gray-800 mb-1">{t('submitSuccess', language)}</h2>
+        <h2 className="text-lg font-bold text-gray-800 mb-1">{language === 'en' ? 'Thank you!' : 'شكراً لك!'}</h2>
+        <p className="text-sm text-gray-500 mb-4 text-center max-w-xs">{t('submitSuccess', language)}</p>
         <Button
           onClick={() => setCurrentView('map')}
-          className="mt-3 bg-teal-600 hover:bg-teal-700 h-9 text-sm"
+          className="bg-teal-600 hover:bg-teal-700 h-10 text-sm px-6"
         >
           {t('navMap', language)}
         </Button>
@@ -123,52 +126,50 @@ export default function SubmitForm() {
   }
 
   return (
-    <div className="max-w-lg mx-auto p-4" dir={isArabic ? 'rtl' : 'ltr'}>
+    <div className="max-w-lg mx-auto p-4 pb-8" dir={isArabic ? 'rtl' : 'ltr'}>
       {/* Back button */}
       <button
         onClick={() => setCurrentView('map')}
-        className="flex items-center gap-1 text-xs text-gray-400 hover:text-teal-600 mb-3 transition-colors"
+        className="flex items-center gap-1 text-sm text-gray-400 hover:text-teal-600 mb-4 transition-colors"
       >
-        <ChevronLeft className={`h-3.5 w-3.5 ${isArabic ? 'rotate-180' : ''}`} />
+        <ChevronLeft className={`h-4 w-4 ${isArabic ? 'rotate-180' : ''}`} />
         {t('navMap', language)}
       </button>
 
-      <h1 className="text-lg font-bold text-gray-800 mb-0.5">{t('submitTitle', language)}</h1>
-      <p className="text-xs text-gray-400 mb-4">{t('submitSubtitle', language)}</p>
+      <h1 className="text-xl font-bold text-gray-800 mb-1">{t('submitTitle', language)}</h1>
+      <p className="text-sm text-gray-400 mb-6">{t('submitSubtitle', language)}</p>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Basic Info */}
-        <div className="space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <Label htmlFor="name" className="text-xs">{t('placeName', language)} *</Label>
-              <Input
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder={t('placeNamePlaceholder', language)}
-                required
-                dir="ltr"
-                className="h-8 text-xs mt-0.5"
-              />
-            </div>
-            <div>
-              <Label htmlFor="nameAr" className="text-xs">{t('placeNameAr', language)}</Label>
-              <Input
-                id="nameAr"
-                value={nameAr}
-                onChange={(e) => setNameAr(e.target.value)}
-                placeholder={t('placeNameArPlaceholder', language)}
-                dir="rtl"
-                className="h-8 text-xs mt-0.5"
-              />
-            </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Basic Info Section */}
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="name" className="text-sm font-medium">{t('placeName', language)} *</Label>
+            <Input
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={t('placeNamePlaceholder', language)}
+              required
+              dir="ltr"
+              className="h-10 text-sm mt-1"
+            />
+          </div>
+          <div>
+            <Label htmlFor="nameAr" className="text-sm font-medium">{t('placeNameAr', language)}</Label>
+            <Input
+              id="nameAr"
+              value={nameAr}
+              onChange={(e) => setNameAr(e.target.value)}
+              placeholder={t('placeNameArPlaceholder', language)}
+              dir="rtl"
+              className="h-10 text-sm mt-1"
+            />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-xs">{t('placeCategory', language)} *</Label>
+              <Label className="text-sm font-medium">{t('placeCategory', language)} *</Label>
               <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger className="h-8 text-xs mt-0.5">
+                <SelectTrigger className="h-10 text-sm mt-1">
                   <SelectValue placeholder={t('selectCategory', language)} />
                 </SelectTrigger>
                 <SelectContent>
@@ -183,9 +184,9 @@ export default function SubmitForm() {
               </Select>
             </div>
             <div>
-              <Label className="text-xs">{t('placeCity', language)} *</Label>
+              <Label className="text-sm font-medium">{t('placeCity', language)} *</Label>
               <Select value={city} onValueChange={setCity}>
-                <SelectTrigger className="h-8 text-xs mt-0.5">
+                <SelectTrigger className="h-10 text-sm mt-1">
                   <SelectValue placeholder={t('selectCity', language)} />
                 </SelectTrigger>
                 <SelectContent>
@@ -196,10 +197,10 @@ export default function SubmitForm() {
             </div>
           </div>
           <div>
-            <Label className="text-xs text-teal-600">{t('clickMap', language)}</Label>
-            <div className="grid grid-cols-2 gap-3 mt-1">
+            <p className="text-sm font-medium text-teal-600 mb-1">{t('clickMap', language)}</p>
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label htmlFor="lat" className="text-[10px] text-gray-400">{t('latitude', language)} *</Label>
+                <Label htmlFor="lat" className="text-xs text-gray-400">{t('latitude', language)} *</Label>
                 <Input
                   id="lat"
                   type="number"
@@ -209,11 +210,11 @@ export default function SubmitForm() {
                   placeholder="31.2001"
                   required
                   dir="ltr"
-                  className="h-8 text-xs"
+                  className="h-10 text-sm mt-0.5"
                 />
               </div>
               <div>
-                <Label htmlFor="lng" className="text-[10px] text-gray-400">{t('longitude', language)} *</Label>
+                <Label htmlFor="lng" className="text-xs text-gray-400">{t('longitude', language)} *</Label>
                 <Input
                   id="lng"
                   type="number"
@@ -223,20 +224,21 @@ export default function SubmitForm() {
                   placeholder="29.9187"
                   required
                   dir="ltr"
-                  className="h-8 text-xs"
+                  className="h-10 text-sm mt-0.5"
                 />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="h-px bg-gray-100" />
+        {/* Divider */}
+        <div className="h-px bg-gray-200" />
 
         {/* Accessibility Scores */}
         <div>
-          <p className="text-xs font-semibold text-gray-700 mb-2">{t('accessibilityScores', language)}</p>
-          <p className="text-[10px] text-gray-400 mb-2">{t('scoreLabel', language)}</p>
-          <div className="space-y-2.5">
+          <p className="text-sm font-semibold text-gray-800 mb-1">{t('accessibilityScores', language)}</p>
+          <p className="text-xs text-gray-400 mb-4">{t('scoreLabel', language)}</p>
+          <div className="space-y-4">
             <ScoreSlider label={t('rampScore', language)} value={rampScore} onChange={setRampScore} />
             <ScoreSlider label={t('elevatorScore', language)} value={elevatorScore} onChange={setElevatorScore} />
             <ScoreSlider label={t('bathroomScore', language)} value={bathroomScore} onChange={setBathroomScore} />
@@ -245,31 +247,35 @@ export default function SubmitForm() {
           </div>
         </div>
 
-        <div className="h-px bg-gray-100" />
+        {/* Divider */}
+        <div className="h-px bg-gray-200" />
 
         {/* Review & Photo */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div>
-            <Label htmlFor="review" className="text-xs">{t('reviewTextLabel', language)}</Label>
+            <Label htmlFor="review" className="text-sm font-medium">{t('reviewTextLabel', language)}</Label>
             <Textarea
               id="review"
               value={reviewText}
               onChange={(e) => setReviewText(e.target.value)}
               placeholder={t('reviewTextPlaceholder', language)}
-              className="min-h-[72px] text-xs mt-0.5"
+              className="min-h-[80px] text-sm mt-1"
               dir={isArabic ? 'rtl' : 'ltr'}
             />
           </div>
           <div>
-            <Label className="text-xs">{t('photoUpload', language)}</Label>
+            <Label className="text-sm font-medium">{t('photoUpload', language)}</Label>
             <label
               htmlFor="photo"
-              className="mt-0.5 flex items-center gap-2 cursor-pointer rounded-lg border border-dashed border-gray-200 p-3 hover:border-teal-300 hover:bg-teal-50/30 transition-colors"
+              className="mt-1 flex items-center gap-3 cursor-pointer rounded-xl border-2 border-dashed border-gray-200 p-4 hover:border-teal-300 hover:bg-teal-50/30 transition-colors"
             >
-              <Upload className="h-4 w-4 text-gray-300" />
-              <span className="text-xs text-gray-400">
-                {photo ? photo.name : t('photoDropzone', language)}
-              </span>
+              <Upload className="h-5 w-5 text-gray-300" />
+              <div>
+                <span className="text-sm text-gray-500 block">
+                  {photo ? photo.name : t('photoDropzone', language)}
+                </span>
+                <span className="text-[10px] text-gray-400">{t('photoFormats', language)}</span>
+              </div>
             </label>
             <input
               id="photo"
@@ -283,9 +289,9 @@ export default function SubmitForm() {
 
         {/* Error */}
         {errorMsg && (
-          <div className="flex items-center gap-2 text-red-500 bg-red-50 p-2.5 rounded-lg">
-            <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-            <span className="text-xs">{errorMsg}</span>
+          <div className="flex items-center gap-2 text-red-500 bg-red-50 p-3 rounded-xl">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            <span className="text-sm">{errorMsg}</span>
           </div>
         )}
 
@@ -293,7 +299,7 @@ export default function SubmitForm() {
         <Button
           type="submit"
           disabled={isSubmitting || !name || !category || !city || !latitude || !longitude}
-          className="w-full h-10 text-sm bg-teal-600 hover:bg-teal-700"
+          className="w-full h-11 text-sm bg-teal-600 hover:bg-teal-700 rounded-xl font-medium"
         >
           {isSubmitting ? t('loading', language) : t('submitPlace', language)}
         </Button>

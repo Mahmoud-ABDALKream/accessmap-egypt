@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic';
 import { useAppStore } from '@/lib/store';
 import { t } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import SearchFilterBar from '@/components/accessibility-map/SearchFilterBar';
 import PlaceSidebar from '@/components/accessibility-map/PlaceSidebar';
 import SubmitForm from '@/components/accessibility-map/SubmitForm';
@@ -22,7 +21,6 @@ import {
   Accessibility,
   Menu,
   X,
-  ChevronLeft,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -45,7 +43,6 @@ export default function Home() {
     language, setLanguage,
     fetchPlaces,
     places,
-    sidebarOpen, setSidebarOpen,
   } = useAppStore();
   const isArabic = language === 'ar';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -80,13 +77,13 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-white" dir={isArabic ? 'rtl' : 'ltr'}>
+    <div className="h-dvh flex flex-col bg-white" dir={isArabic ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 z-50 sticky top-0">
-        <div className="flex items-center justify-between px-3 h-12">
+      <header className="bg-white border-b border-gray-200 z-50 shrink-0">
+        <div className="flex items-center justify-between px-4 h-12">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-teal-600 rounded-md flex items-center justify-center">
+            <div className="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center">
               <Accessibility className="h-4 w-4 text-white" />
             </div>
             <span className="text-sm font-bold text-teal-700 hidden sm:block">
@@ -95,14 +92,14 @@ export default function Home() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-0.5" role="navigation" aria-label="Main navigation">
+          <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="Main navigation">
             {navItems.map((item) => (
               <Button
                 key={item.view}
                 variant="ghost"
                 size="sm"
                 onClick={() => setCurrentView(item.view)}
-                className={`gap-1.5 text-xs h-8 px-2.5 ${
+                className={`gap-1.5 text-xs h-8 px-3 rounded-lg ${
                   currentView === item.view
                     ? 'bg-teal-50 text-teal-700 font-semibold'
                     : 'text-gray-500 hover:text-teal-600 hover:bg-gray-50'
@@ -120,7 +117,7 @@ export default function Home() {
               variant="ghost"
               size="sm"
               onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
-              className="gap-1 text-xs h-8 px-2"
+              className="gap-1 text-xs h-8 px-2 rounded-lg"
               aria-label={language === 'en' ? 'التبديل إلى العربية' : 'Switch to English'}
             >
               <Languages className="h-3.5 w-3.5" />
@@ -140,7 +137,7 @@ export default function Home() {
 
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
-          <nav className="md:hidden border-t border-gray-50 bg-white px-2 py-1.5 shadow-lg" role="navigation" aria-label="Mobile navigation">
+          <nav className="md:hidden border-t border-gray-100 bg-white px-3 py-2 shadow-lg" role="navigation" aria-label="Mobile navigation">
             <div className="flex flex-col gap-0.5">
               {navItems.map((item) => (
                 <Button
@@ -151,7 +148,7 @@ export default function Home() {
                     setCurrentView(item.view);
                     setMobileMenuOpen(false);
                   }}
-                  className={`justify-start gap-2 text-sm h-9 ${
+                  className={`justify-start gap-2 text-sm h-9 rounded-lg ${
                     currentView === item.view
                       ? 'bg-teal-50 text-teal-700 font-semibold'
                       : 'text-gray-500 hover:text-teal-600'
@@ -167,17 +164,21 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col relative overflow-hidden">
+      <main className="flex-1 overflow-hidden relative">
         {/* Map View */}
         {currentView === 'map' && (
-          <div className="flex-1 flex flex-col relative">
-            <SearchFilterBar />
-            <div className="flex-1 relative" style={{ height: 'calc(100dvh - 108px)' }}>
+          <div className="h-full flex flex-col">
+            {/* Search & Filter Bar - always visible at top */}
+            <div className="shrink-0 z-40 bg-white border-b border-gray-200">
+              <SearchFilterBar />
+            </div>
+            {/* Map takes remaining space */}
+            <div className="flex-1 relative">
               <MapView />
-              {/* Places count */}
-              <div className="absolute bottom-16 sm:bottom-4 left-1/2 -translate-x-1/2 z-[1000]">
-                <div className="bg-white/90 backdrop-blur-sm rounded-full shadow-md px-3 py-1.5 text-xs text-gray-600 font-medium border border-gray-100">
-                  {places.length} {language === 'en' ? 'places' : 'مكان'}
+              {/* Places count badge */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000]">
+                <div className="bg-white/95 backdrop-blur-sm rounded-full shadow-lg px-4 py-1.5 text-xs text-gray-600 font-medium border border-gray-200">
+                  {places.length} {language === 'en' ? 'places on map' : 'مكان على الخريطة'}
                 </div>
               </div>
             </div>
@@ -187,35 +188,35 @@ export default function Home() {
 
         {/* Submit View */}
         {currentView === 'submit' && (
-          <div className="flex-1 overflow-y-auto" style={{ minHeight: 'calc(100dvh - 108px)' }}>
+          <div className="h-full overflow-y-auto">
             <SubmitForm />
           </div>
         )}
 
         {/* Stats View */}
         {currentView === 'stats' && (
-          <div className="flex-1 overflow-y-auto" style={{ minHeight: 'calc(100dvh - 108px)' }}>
+          <div className="h-full overflow-y-auto">
             <StatsDashboard />
           </div>
         )}
 
         {/* About View */}
         {currentView === 'about' && (
-          <div className="flex-1 overflow-y-auto" style={{ minHeight: 'calc(100dvh - 108px)' }}>
+          <div className="h-full overflow-y-auto">
             <AboutSection />
           </div>
         )}
 
         {/* Admin View */}
         {currentView === 'admin' && (
-          <div className="flex-1 overflow-y-auto" style={{ minHeight: 'calc(100dvh - 108px)' }}>
+          <div className="h-full overflow-y-auto">
             <AdminSection />
           </div>
         )}
       </main>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden flex items-center justify-around border-t border-gray-100 bg-white h-14 shrink-0 safe-area-bottom" role="navigation" aria-label="Bottom navigation">
+      <nav className="md:hidden flex items-center justify-around border-t border-gray-200 bg-white h-14 shrink-0 safe-area-bottom" role="navigation" aria-label="Bottom navigation">
         {navItems.map((item) => (
           <button
             key={item.view}
@@ -228,16 +229,16 @@ export default function Home() {
             aria-label={item.label}
             aria-current={currentView === item.view ? 'page' : undefined}
           >
-            <item.icon className="h-4.5 w-4.5" />
+            <item.icon className="h-5 w-5" />
             <span className="text-[10px] font-medium leading-tight">{item.label}</span>
           </button>
         ))}
       </nav>
 
       {/* Desktop Footer */}
-      <footer className="hidden md:block bg-gray-50 border-t border-gray-100 py-2 px-4 text-center shrink-0">
+      <footer className="hidden md:block bg-gray-50 border-t border-gray-200 py-2 px-4 text-center shrink-0">
         <p className="text-[11px] text-gray-400">
-          {t('appName', language)} · {t('appTagline', language)}
+          {t('appName', language)} &middot; {t('appTagline', language)}
         </p>
       </footer>
     </div>
