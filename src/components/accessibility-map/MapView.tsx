@@ -37,7 +37,6 @@ function getCategoryEmoji(category: string): string {
 
 function createPinIcon(score: number, category: string, isSelected: boolean): L.DivIcon {
   const color = getScoreColor(score);
-  const emoji = getCategoryEmoji(category);
   const h = isSelected ? 44 : 36;
   const w = isSelected ? 30 : 26;
   const tipY = h;
@@ -224,13 +223,6 @@ export default function MapView() {
     cluster.addTo(map);
     clusterRef.current = cluster;
 
-    // Handle cluster marker clicks
-    cluster.on('click', (e: L.LeafletEvent) => {
-      const marker = (e as L.LeafletMouseEvent).layer as L.Marker;
-      const placeId = marker.getPopup()?.getContent() ? undefined : undefined;
-      void placeId;
-    });
-
     map.on('click', handleMapClick);
     mapRef.current = map;
 
@@ -342,6 +334,11 @@ export default function MapView() {
     );
   }, [locating]);
 
+  // ─── Quick stats ────────────────────────────────────────────────────────
+  const goodCount = places.filter(p => p.overallScore >= 4).length;
+  const modCount = places.filter(p => p.overallScore >= 2.5 && p.overallScore < 4).length;
+  const poorCount = places.filter(p => p.overallScore < 2.5).length;
+
   // ─── Render ─────────────────────────────────────────────────────────────
   return (
     <div className="relative w-full h-full">
@@ -356,12 +353,12 @@ export default function MapView() {
       )}
 
       {/* ── Map style switcher ── */}
-      <div className="absolute top-3 left-3 z-[1000] flex rounded-lg overflow-hidden shadow-md border border-gray-200/80 bg-white/90 backdrop-blur-sm">
+      <div className="absolute top-3 left-3 z-[1000] flex rounded-xl overflow-hidden shadow-md border border-gray-200/80 bg-white/90 backdrop-blur-sm">
         {(['voyager', 'light', 'satellite'] as MapStyle[]).map((style) => (
           <button
             key={style}
             onClick={() => setMapStyle(style)}
-            className={`px-3 py-1.5 text-[11px] font-semibold transition-colors ${
+            className={`px-3 py-1.5 text-[11px] font-semibold transition-all duration-200 ${
               mapStyle === style
                 ? 'bg-teal-600 text-white'
                 : 'text-gray-600 hover:bg-gray-100'
@@ -372,11 +369,39 @@ export default function MapView() {
         ))}
       </div>
 
+      {/* ── Quick Stats (top-right) ── */}
+      <div className="absolute top-3 right-3 z-[1000] bg-white/80 backdrop-blur-xl rounded-xl shadow-md border border-gray-200/60 p-2.5 min-w-[140px]">
+        <p className="text-[9px] font-bold text-gray-400 mb-2 uppercase tracking-widest">
+          {language === 'en' ? 'Overview' : 'نظرة عامة'}
+        </p>
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
+          <span className="text-[10px] text-gray-600 font-medium flex-1">
+            {language === 'en' ? 'Accessible' : 'متاح'}
+          </span>
+          <span className="text-[10px] text-gray-800 font-bold">{goodCount}</span>
+        </div>
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+          <span className="text-[10px] text-gray-600 font-medium flex-1">
+            {language === 'en' ? 'Moderate' : 'متوسط'}
+          </span>
+          <span className="text-[10px] text-gray-800 font-bold">{modCount}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
+          <span className="text-[10px] text-gray-600 font-medium flex-1">
+            {language === 'en' ? 'Poor' : 'ضعيف'}
+          </span>
+          <span className="text-[10px] text-gray-800 font-bold">{poorCount}</span>
+        </div>
+      </div>
+
       {/* ── Locate me button ── */}
       <button
         onClick={handleLocateMe}
         disabled={locating}
-        className="absolute bottom-24 right-3 z-[1000] w-10 h-10 rounded-full bg-white shadow-md border border-gray-200/80 flex items-center justify-center hover:bg-gray-50 active:scale-95 transition-all disabled:opacity-50"
+        className="map-control-btn absolute bottom-24 md:bottom-6 right-3 z-[1000] w-10 h-10 rounded-full bg-white shadow-md border border-gray-200/80 flex items-center justify-center hover:bg-gray-50 active:scale-95 transition-all disabled:opacity-50"
         title={language === 'en' ? 'My Location' : 'موقعي'}
         aria-label={language === 'en' ? 'My Location' : 'موقعي'}
       >
@@ -395,31 +420,6 @@ export default function MapView() {
           </svg>
         )}
       </button>
-
-      {/* ── Legend (glassmorphism) ── */}
-      <div className="absolute top-3 right-3 z-[1000] bg-white/60 backdrop-blur-xl rounded-2xl shadow-lg border border-white/40 p-3.5 min-w-[150px]">
-        <p className="text-[10px] font-bold text-gray-500 mb-2.5 uppercase tracking-widest">
-          {language === 'en' ? 'Accessibility' : 'إمكانية الوصول'}
-        </p>
-        <div className="flex items-center gap-2.5">
-          <span className="w-3.5 h-3.5 rounded-full bg-red-500 shadow-sm shadow-red-200" />
-          <span className="text-[11px] text-gray-700 font-medium">
-            {language === 'en' ? 'Poor (0–2.4)' : 'ضعيف (0–2.4)'}
-          </span>
-        </div>
-        <div className="flex items-center gap-2.5 mt-2">
-          <span className="w-3.5 h-3.5 rounded-full bg-amber-500 shadow-sm shadow-amber-200" />
-          <span className="text-[11px] text-gray-700 font-medium">
-            {language === 'en' ? 'Moderate (2.5–3.9)' : 'متوسط (2.5–3.9)'}
-          </span>
-        </div>
-        <div className="flex items-center gap-2.5 mt-2">
-          <span className="w-3.5 h-3.5 rounded-full bg-green-500 shadow-sm shadow-green-200" />
-          <span className="text-[11px] text-gray-700 font-medium">
-            {language === 'en' ? 'Good (4–5)' : 'جيد (4–5)'}
-          </span>
-        </div>
-      </div>
     </div>
   );
 }

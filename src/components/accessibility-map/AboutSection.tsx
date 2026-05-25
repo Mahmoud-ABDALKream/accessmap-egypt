@@ -13,97 +13,124 @@ import {
   ChevronLeft,
 } from 'lucide-react';
 
+const stepItems = [
+  { icon: Search, text: 'aboutHowItWorksText1' },
+  { icon: PenLine, text: 'aboutHowItWorksText2' },
+  { icon: Shield, text: 'aboutHowItWorksText3' },
+  { icon: Users, text: 'aboutHowItWorksText4' },
+] as const;
+
+const criteriaItems = [
+  { icon: '🦽', titleKey: 'aboutRamp', desc: 'Ramp access for wheelchair users' },
+  { icon: '🛗', titleKey: 'aboutElevator', desc: 'Elevator availability and accessibility' },
+  { icon: '🚻', titleKey: 'aboutBathroom', desc: 'Accessible bathroom facilities' },
+  { icon: '🅿️', titleKey: 'aboutParking', desc: 'Designated accessible parking' },
+  { icon: '🚪', titleKey: 'aboutDoorways', desc: 'Wide doorways for easy passage' },
+] as const;
+
 export default function AboutSection() {
   const { language, setCurrentView } = useAppStore();
   const isArabic = language === 'ar';
 
   return (
-    <div className="max-w-2xl mx-auto p-4" dir={isArabic ? 'rtl' : 'ltr'}>
+    <div className="view-fade-in max-w-4xl mx-auto p-4 pb-8" dir={isArabic ? 'rtl' : 'ltr'}>
       {/* Back button */}
       <button
         onClick={() => setCurrentView('map')}
-        className="flex items-center gap-1 text-xs text-gray-400 hover:text-teal-600 mb-3 transition-colors"
+        className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-teal-600 mb-4 transition-colors group"
       >
-        <ChevronLeft className={`h-3.5 w-3.5 ${isArabic ? 'rotate-180' : ''}`} />
+        <ChevronLeft className={`h-4 w-4 transition-transform group-hover:-translate-x-0.5 ${isArabic ? 'rotate-180' : ''}`} />
         {t('navMap', language)}
       </button>
 
-      {/* Hero */}
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center justify-center w-12 h-12 bg-teal-50 rounded-full mb-2">
-          <Accessibility className="h-6 w-6 text-teal-600" />
+      {/* Hero Section with Gradient */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-teal-500 via-emerald-500 to-green-500 rounded-2xl p-8 text-center mb-8 shadow-lg">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.15),transparent_60%)]" />
+        <div className="relative z-10">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4 animate-pulse">
+            <Accessibility className="h-10 w-10 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold text-white mb-2">{t('aboutTitle', language)}</h1>
+          <p className="text-teal-100 text-sm max-w-md mx-auto">
+            {t('aboutMissionText', language)}
+          </p>
         </div>
-        <h1 className="text-xl font-bold text-gray-800">{t('aboutTitle', language)}</h1>
       </div>
 
-      {/* Mission */}
-      <div className="bg-teal-50/70 rounded-xl p-4 mb-4">
-        <div className="flex items-center gap-2 mb-2">
-          <Heart className="h-4 w-4 text-teal-600" />
-          <h2 className="text-sm font-semibold text-teal-800">{t('aboutMission', language)}</h2>
+      {/* Mission Card with Left Border Accent */}
+      <div className="bg-white rounded-xl p-6 mb-8 border border-gray-100 shadow-sm border-l-4 border-l-teal-500">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="p-2 bg-teal-50 rounded-lg">
+            <Heart className="h-5 w-5 text-teal-600" />
+          </div>
+          <h2 className="text-lg font-semibold text-gray-800">{t('aboutMission', language)}</h2>
         </div>
-        <p className="text-xs text-gray-600 leading-relaxed">{t('aboutMissionText', language)}</p>
+        <p className="text-sm text-gray-600 leading-relaxed">{t('aboutMissionText', language)}</p>
       </div>
 
-      {/* How It Works */}
-      <div className="mb-4">
-        <h2 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1.5">
-          <Users className="h-4 w-4 text-teal-600" />
+      {/* How It Works - Numbered Steps */}
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold text-gray-700 mb-5 flex items-center gap-2">
+          <Users className="h-5 w-5 text-teal-600" />
           {t('aboutHowItWorks', language)}
         </h2>
-        <div className="space-y-2">
-          {[
-            { icon: Search, text: t('aboutHowItWorksText1', language) },
-            { icon: PenLine, text: t('aboutHowItWorksText2', language) },
-            { icon: Shield, text: t('aboutHowItWorksText3', language) },
-            { icon: Users, text: t('aboutHowItWorksText4', language) },
-          ].map((item, i) => (
-            <div key={i} className="flex items-start gap-2.5 bg-gray-50 rounded-lg p-2.5">
-              <div className="p-1.5 bg-white rounded-md shrink-0">
-                <item.icon className="h-3.5 w-3.5 text-teal-600" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {stepItems.map((item, i) => (
+            <div
+              key={i}
+              className="relative flex items-start gap-4 bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-teal-100 transition-all group"
+            >
+              <div className="shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+                {i + 1}
               </div>
-              <p className="text-xs text-gray-600 leading-relaxed">{item.text}</p>
+              <div className="min-w-0 flex-1">
+                <item.icon className="h-5 w-5 text-teal-500 mb-1.5 group-hover:text-teal-600 transition-colors" />
+                <p className="text-sm text-gray-600 leading-relaxed">{t(item.text, language)}</p>
+              </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Accessibility Criteria */}
-      <div className="mb-4">
-        <h2 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1.5">
-          <Accessibility className="h-4 w-4 text-teal-600" />
+      {/* Accessibility Criteria - Grid Layout */}
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold text-gray-700 mb-5 flex items-center gap-2">
+          <Accessibility className="h-5 w-5 text-teal-600" />
           {t('aboutCriteria', language)}
         </h2>
-        <div className="space-y-1.5">
-          {[
-            { icon: '🦽', text: t('aboutRamp', language) },
-            { icon: '🛗', text: t('aboutElevator', language) },
-            { icon: '🚻', text: t('aboutBathroom', language) },
-            { icon: '🅿️', text: t('aboutParking', language) },
-            { icon: '🚪', text: t('aboutDoorways', language) },
-          ].map((item, i) => (
-            <div key={i} className="flex items-start gap-2.5 p-2 bg-gray-50 rounded-lg">
-              <span className="text-base">{item.icon}</span>
-              <p className="text-xs text-gray-600 leading-relaxed">{item.text}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {criteriaItems.map((item, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-teal-100 transition-all group"
+            >
+              <div className="text-3xl mb-3">{item.icon}</div>
+              <h3 className="text-sm font-semibold text-gray-800 mb-1.5 group-hover:text-teal-700 transition-colors">
+                {t(item.titleKey, language)}
+              </h3>
+              <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Contribute CTA */}
-      <div className="bg-gradient-to-br from-teal-50 to-green-50 rounded-xl p-4 text-center border border-teal-100">
-        <h3 className="text-sm font-bold text-teal-800 mb-1">{t('aboutContribute', language)}</h3>
-        <p className="text-xs text-gray-600 leading-relaxed mb-3">{t('aboutContributeText', language)}</p>
-        <Button
-          onClick={() => setCurrentView('submit')}
-          className="bg-teal-600 hover:bg-teal-700 text-white h-9 text-sm"
-        >
-          {t('navSubmit', language)}
-        </Button>
+      {/* Contribute CTA - Bigger and Prominent */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-teal-600 via-emerald-500 to-green-500 rounded-2xl p-8 text-center shadow-lg mb-6">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(255,255,255,0.12),transparent_50%)]" />
+        <div className="relative z-10">
+          <h3 className="text-xl font-bold text-white mb-2">{t('aboutContribute', language)}</h3>
+          <p className="text-sm text-teal-100 leading-relaxed mb-5 max-w-md mx-auto">{t('aboutContributeText', language)}</p>
+          <Button
+            onClick={() => setCurrentView('submit')}
+            className="bg-white text-teal-700 hover:bg-teal-50 font-semibold h-12 px-8 text-base rounded-xl shadow-md hover:shadow-lg transition-all"
+          >
+            {t('navSubmit', language)}
+          </Button>
+        </div>
       </div>
 
       {/* Disclaimer */}
-      <p className="text-[10px] text-gray-400 text-center mt-4">
+      <p className="text-[11px] text-gray-400 text-center leading-relaxed">
         {t('aboutDisclaimer', language)}
       </p>
     </div>
