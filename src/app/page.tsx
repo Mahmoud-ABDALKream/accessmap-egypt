@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { useAppStore } from '@/lib/store';
 import { t } from '@/lib/i18n';
 import SearchFilterBar from '@/components/accessibility-map/SearchFilterBar';
@@ -89,9 +90,14 @@ export default function Home() {
         <div className="flex items-center justify-between px-4 h-14">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-gradient-to-br from-teal-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-md shadow-teal-200/50">
-              <Accessibility className="h-5 w-5 text-white" />
-            </div>
+            <Image
+              src="/favicon-1024.png"
+              alt="AccessMap Egypt"
+              width={36}
+              height={36}
+              className="rounded-xl shadow-md shadow-teal-200/50"
+              priority
+            />
             <div className="hidden sm:block">
               <span className="text-base font-bold text-gray-800 tracking-tight">
                 {t('appName', language)}
@@ -258,10 +264,33 @@ export default function Home() {
       </nav>
 
       {/* Desktop Footer */}
-      <footer className="hidden md:block bg-gray-50/80 border-t border-gray-100 py-2 px-4 text-center shrink-0">
-        <p className="text-[11px] text-gray-400">
-          {t('appName', language)} &middot; {t('appTagline', language)}
-        </p>
+      <footer className="hidden md:block bg-gradient-to-r from-gray-50 to-teal-50/30 border-t border-gray-100 py-3 px-4 shrink-0">
+        <div className="flex items-center justify-between max-w-6xl mx-auto">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/favicon-1024.png"
+              alt="AccessMap Egypt"
+              width={24}
+              height={24}
+              className="rounded-lg"
+            />
+            <div>
+              <p className="text-xs font-semibold text-gray-700 leading-tight">
+                {t('appName', language)}
+              </p>
+              <p className="text-[10px] text-gray-400">{t('footerTagline', language)}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <p className="text-[10px] text-gray-400">{t('footerBuiltBy', language)}</p>
+            <span className="text-[10px] text-gray-300">•</span>
+            <p className="text-[10px] text-gray-400">{t('footerCopyright', language)}</p>
+            <span className="text-[10px] text-gray-300">•</span>
+            <span className="inline-flex items-center gap-1 text-[10px] text-teal-600 font-medium bg-teal-50 px-1.5 py-0.5 rounded">
+              {t('footerVersion', language)}
+            </span>
+          </div>
+        </div>
       </footer>
     </div>
   );

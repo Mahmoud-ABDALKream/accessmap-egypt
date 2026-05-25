@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { useAppStore, type PlaceData } from '@/lib/store';
 import { t } from '@/lib/i18n';
 import { Input } from '@/components/ui/input';
@@ -320,9 +321,13 @@ export default function PlacesListPanel({ collapsed, onToggleCollapse }: PlacesL
           {/* Title row */}
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-2 min-w-0">
-              <div className="w-7 h-7 bg-gradient-to-br from-teal-500 to-teal-700 rounded-lg flex items-center justify-center shrink-0">
-                <Accessibility className="h-3.5 w-3.5 text-white" />
-              </div>
+              <Image
+                src="/favicon-1024.png"
+                alt="AccessMap Egypt"
+                width={28}
+                height={28}
+                className="rounded-lg shrink-0"
+              />
               <div className="min-w-0">
                 <h2 className="text-sm font-bold text-gray-800 truncate">
                   {t('appName', language)}
