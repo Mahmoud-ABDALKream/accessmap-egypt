@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useAppStore } from '@/lib/store';
 import { t } from '@/lib/i18n';
 import SearchFilterBar from '@/components/accessibility-map/SearchFilterBar';
+import PlacesListPanel from '@/components/accessibility-map/PlacesListPanel';
 import PlaceSidebar from '@/components/accessibility-map/PlaceSidebar';
 import SubmitForm from '@/components/accessibility-map/SubmitForm';
 import StatsDashboard from '@/components/accessibility-map/StatsDashboard';
@@ -21,7 +22,6 @@ import {
   Menu,
   X,
 } from 'lucide-react';
-import { useState } from 'react';
 
 // Dynamically import MapView to avoid SSR issues with Leaflet
 const MapView = dynamic(() => import('@/components/accessibility-map/MapView'), {
@@ -45,6 +45,13 @@ export default function Home() {
   } = useAppStore();
   const isArabic = language === 'ar';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [listPanelCollapsed, setListPanelCollapsed] = useState(false);
+
+  // Sync HTML lang/dir attributes with language
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.documentElement.dir = isArabic ? 'rtl' : 'ltr';
+  }, [language, isArabic]);
 
   // Fetch places on mount
   useEffect(() => {
@@ -78,53 +85,53 @@ export default function Home() {
   return (
     <div className="h-dvh flex flex-col bg-white" dir={isArabic ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <header className="bg-white/95 backdrop-blur-md border-b border-gray-100 z-50 shrink-0">
-        <div className="flex items-center justify-between px-4 h-12">
+      <header className="header-gradient border-b border-gray-200/60 z-50 shrink-0">
+        <div className="flex items-center justify-between px-4 h-14">
           {/* Logo */}
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-700 rounded-xl flex items-center justify-center shadow-sm shadow-teal-200">
-              <Accessibility className="h-4 w-4 text-white" />
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-gradient-to-br from-teal-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-md shadow-teal-200/50">
+              <Accessibility className="h-5 w-5 text-white" />
             </div>
             <div className="hidden sm:block">
-              <span className="text-sm font-bold text-gray-800 tracking-tight">
+              <span className="text-base font-bold text-gray-800 tracking-tight">
                 {t('appName', language)}
               </span>
-              <span className="block text-[9px] text-gray-400 -mt-0.5 font-medium">
+              <span className="block text-[10px] text-gray-400 -mt-0.5 font-medium">
                 {t('appTagline', language)}
               </span>
             </div>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-0.5 bg-gray-50/80 rounded-xl p-1" role="navigation" aria-label="Main navigation">
+          <nav className="hidden md:flex items-center gap-1 bg-gray-50/80 rounded-xl p-1 border border-gray-200/50" role="navigation" aria-label="Main navigation">
             {navItems.map((item) => (
               <button
                 key={item.view}
                 onClick={() => setCurrentView(item.view)}
-                className={`flex items-center gap-1.5 text-xs h-8 px-3 rounded-lg transition-all duration-200 ${
+                className={`flex items-center gap-2 text-sm h-9 px-4 rounded-lg transition-all duration-200 ${
                   currentView === item.view
-                    ? 'bg-white text-teal-700 font-semibold shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700 hover:bg-white/50'
+                    ? 'bg-white text-teal-700 font-semibold shadow-sm border border-teal-100'
+                    : 'text-gray-500 hover:text-gray-700 hover:bg-white/60'
                 }`}
               >
-                <item.icon className="h-3.5 w-3.5" />
+                <item.icon className="h-4 w-4" />
                 {item.label}
               </button>
             ))}
           </nav>
 
           {/* Right side */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
-              className="flex items-center gap-1.5 text-xs h-8 px-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors font-medium"
+              className="flex items-center gap-2 text-sm h-9 px-3 rounded-xl border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all font-medium"
               aria-label={language === 'en' ? 'التبديل إلى العربية' : 'Switch to English'}
             >
-              <Languages className="h-3.5 w-3.5 text-gray-400" />
+              <Languages className="h-4 w-4 text-gray-400" />
               <span className="text-gray-600">{language === 'en' ? 'عربي' : 'EN'}</span>
             </button>
             <button
-              className="md:hidden h-8 w-8 rounded-lg flex items-center justify-center hover:bg-gray-100 transition-colors"
+              className="md:hidden h-9 w-9 rounded-xl flex items-center justify-center hover:bg-gray-100 transition-colors border border-gray-200"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -144,13 +151,13 @@ export default function Home() {
                     setCurrentView(item.view);
                     setMobileMenuOpen(false);
                   }}
-                  className={`flex items-center gap-2.5 text-sm h-10 px-3 rounded-xl transition-colors ${
+                  className={`flex items-center gap-3 text-sm h-11 px-4 rounded-xl transition-colors ${
                     currentView === item.view
                       ? 'bg-teal-50 text-teal-700 font-semibold'
                       : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
                   }`}
                 >
-                  <item.icon className="h-4 w-4" />
+                  <item.icon className="h-5 w-5" />
                   {item.label}
                 </button>
               ))}
@@ -161,63 +168,76 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="flex-1 overflow-hidden relative">
-        {/* Map View */}
+        {/* Map View — Professional split layout */}
         {currentView === 'map' && (
-          <div className="h-full flex flex-col">
-            {/* Search & Filter Bar - always visible at top */}
-            <div className="shrink-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100">
-              <SearchFilterBar />
-            </div>
-            {/* Map takes remaining space */}
+          <div className="h-full flex flex-col md:flex-row">
+            {/* Desktop: Left Panel with Places List */}
+            <PlacesListPanel
+              collapsed={listPanelCollapsed}
+              onToggleCollapse={() => setListPanelCollapsed(!listPanelCollapsed)}
+            />
+
+            {/* Map Area */}
             <div className="flex-1 relative">
-              <MapView />
-              {/* Places count badge */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000]">
-                <div className="bg-white/95 backdrop-blur-sm rounded-full shadow-lg px-4 py-1.5 text-xs text-gray-600 font-medium border border-gray-200">
-                  {places.length} {language === 'en' ? 'places on map' : 'مكان على الخريطة'}
+              {/* Mobile: Search bar at top */}
+              <div className="md:hidden shrink-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100">
+                <SearchFilterBar />
+              </div>
+
+              <div className="h-full relative">
+                <MapView />
+
+                {/* Mobile: Places count badge */}
+                <div className="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000]">
+                  <div className="bg-white/95 backdrop-blur-sm rounded-full shadow-lg px-4 py-2 text-xs text-gray-600 font-medium border border-gray-200 flex items-center gap-2">
+                    <MapPin className="h-3.5 w-3.5 text-teal-500" />
+                    {places.length} {language === 'en' ? 'places' : 'مكان'}
+                  </div>
                 </div>
               </div>
             </div>
+
+            {/* Detail Sidebar */}
             <PlaceSidebar />
           </div>
         )}
 
         {/* Submit View */}
         {currentView === 'submit' && (
-          <div className="h-full overflow-y-auto">
+          <div className="h-full overflow-y-auto view-fade-in">
             <SubmitForm />
           </div>
         )}
 
         {/* Stats View */}
         {currentView === 'stats' && (
-          <div className="h-full overflow-y-auto">
+          <div className="h-full overflow-y-auto view-fade-in">
             <StatsDashboard />
           </div>
         )}
 
         {/* About View */}
         {currentView === 'about' && (
-          <div className="h-full overflow-y-auto">
+          <div className="h-full overflow-y-auto view-fade-in">
             <AboutSection />
           </div>
         )}
 
         {/* Admin View */}
         {currentView === 'admin' && (
-          <div className="h-full overflow-y-auto">
+          <div className="h-full overflow-y-auto view-fade-in">
             <AdminSection />
           </div>
         )}
       </main>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden flex items-center justify-around border-t border-gray-100 bg-white/95 backdrop-blur-md h-14 shrink-0 safe-area-bottom" role="navigation" aria-label="Bottom navigation">
+      <nav className="md:hidden flex items-center justify-around border-t border-gray-200 bg-white/95 backdrop-blur-md h-16 shrink-0 safe-area-bottom shadow-[0_-1px_3px_rgba(0,0,0,0.05)]" role="navigation" aria-label="Bottom navigation">
         {navItems.map((item) => (
           <button
             key={item.view}
             onClick={() => setCurrentView(item.view)}
-            className={`flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all duration-200 ${
+            className={`flex flex-col items-center justify-center gap-1 flex-1 h-full transition-all duration-200 ${
               currentView === item.view
                 ? 'text-teal-600'
                 : 'text-gray-400 active:text-gray-600'
@@ -225,13 +245,13 @@ export default function Home() {
             aria-label={item.label}
             aria-current={currentView === item.view ? 'page' : undefined}
           >
-            <div className={`p-1 rounded-lg transition-all duration-200 ${
+            <div className={`p-1.5 rounded-xl transition-all duration-200 ${
               currentView === item.view ? 'bg-teal-50' : ''
             }`}>
               <item.icon className="h-5 w-5" />
             </div>
             <span className={`text-[10px] leading-tight ${
-              currentView === item.view ? 'font-semibold' : 'font-medium'
+              currentView === item.view ? 'font-bold' : 'font-medium'
             }`}>{item.label}</span>
           </button>
         ))}
