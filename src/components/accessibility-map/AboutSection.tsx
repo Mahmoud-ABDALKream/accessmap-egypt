@@ -53,7 +53,7 @@ export default function AboutSection() {
         <div className="relative z-10">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4 p-2">
             <Image
-              src="/favicon-1024.png"
+              src="/favicon-1024.jpg"
               alt="AccessMap Egypt"
               width={60}
               height={60}
@@ -181,7 +181,7 @@ export default function AboutSection() {
         <div className="text-center py-4">
           <div className="inline-flex items-center gap-2 mb-2">
             <Image
-              src="/favicon-1024.png"
+              src="/favicon-1024.jpg"
               alt="AccessMap Egypt"
               width={32}
               height={32}

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useAppStore } from '@/lib/store';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { t } from '@/lib/i18n';
 import SearchFilterBar from '@/components/accessibility-map/SearchFilterBar';
 import PlacesListPanel from '@/components/accessibility-map/PlacesListPanel';
@@ -84,6 +85,7 @@ export default function Home() {
   ];
 
   return (
+    <ErrorBoundary>
     <div className="h-dvh flex flex-col bg-white" dir={isArabic ? 'rtl' : 'ltr'}>
       {/* Header */}
       <header className="header-gradient border-b border-gray-200/60 z-50 shrink-0">
@@ -91,7 +93,7 @@ export default function Home() {
           {/* Logo */}
           <div className="flex items-center gap-3">
             <Image
-              src="/favicon-1024.png"
+              src="/favicon-1024.jpg"
               alt="AccessMap Egypt"
               width={36}
               height={36}
@@ -268,7 +270,7 @@ export default function Home() {
         <div className="flex items-center justify-between max-w-6xl mx-auto">
           <div className="flex items-center gap-2">
             <Image
-              src="/favicon-1024.png"
+              src="/favicon-1024.jpg"
               alt="AccessMap Egypt"
               width={24}
               height={24}
@@ -293,5 +295,6 @@ export default function Home() {
         </div>
       </footer>
     </div>
+    </ErrorBoundary>
   );
 }
