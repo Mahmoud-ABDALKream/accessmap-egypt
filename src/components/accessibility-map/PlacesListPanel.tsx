@@ -322,7 +322,7 @@ export default function PlacesListPanel({ collapsed, onToggleCollapse }: PlacesL
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-2 min-w-0">
               <Image
-                src="/favicon-1024.png"
+                src="/favicon-1024.jpg"
                 alt="AccessMap Egypt"
                 width={28}
                 height={28}

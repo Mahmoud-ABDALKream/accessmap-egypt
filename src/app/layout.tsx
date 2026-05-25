@@ -64,7 +64,7 @@ export const metadata: Metadata = {
       "Discover, rate, and review the physical accessibility of public places in Alexandria, Cairo, and Giza. Helping people with disabilities navigate Egyptian cities.",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-image.jpg",
         width: 1344,
         height: 768,
         alt: "AccessMap Egypt — Accessibility Map for Egyptian Cities",
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     title: "AccessMap Egypt — Accessibility Map for Egyptian Cities",
     description:
       "Discover, rate, and review the physical accessibility of public places in Egypt for people with disabilities.",
-    images: ["/og-image.png"],
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
@@ -95,10 +95,10 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon-1024.png", type: "image/png", sizes: "1024x1024" },
+      { url: "/favicon-1024.jpg", type: "image/jpeg", sizes: "1024x1024" },
     ],
     apple: [
-      { url: "/apple-touch-icon.png", sizes: "1024x1024", type: "image/png" },
+      { url: "/apple-touch-icon.jpg", sizes: "1024x1024", type: "image/jpeg" },
     ],
   },
   manifest: "/manifest.json",

@@ -12,9 +12,9 @@
   "categories": ["accessibility", "community", "maps"],
   "icons": [
     {
-      "src": "/favicon-1024.png",
+      "src": "/favicon-1024.jpg",
       "sizes": "1024x1024",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "any"
     },
     {
@@ -24,9 +24,9 @@
       "purpose": "any"
     },
     {
-      "src": "/apple-touch-icon.png",
+      "src": "/apple-touch-icon.jpg",
       "sizes": "1024x1024",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "maskable"
     }
   ]
