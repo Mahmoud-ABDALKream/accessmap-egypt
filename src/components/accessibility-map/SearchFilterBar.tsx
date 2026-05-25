@@ -92,6 +92,7 @@ export default function SearchFilterBar() {
               <SelectItem value="all">{t('filterAll', language)}</SelectItem>
               <SelectItem value="alexandria">{t('filterAlexandria', language)}</SelectItem>
               <SelectItem value="cairo">{t('filterCairo', language)}</SelectItem>
+              <SelectItem value="giza">{t('filterGiza', language)}</SelectItem>
             </SelectContent>
           </Select>
           <Select value={categoryFilter || 'all'} onValueChange={setCategoryFilter}>
@@ -100,12 +101,19 @@ export default function SearchFilterBar() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t('filterAll', language)}</SelectItem>
+              <SelectItem value="museum">🏛️ {t('filterMuseum', language)}</SelectItem>
+              <SelectItem value="monument">🗿 {t('filterMonument', language)}</SelectItem>
               <SelectItem value="mosque">🕌 {t('filterMosque', language)}</SelectItem>
+              <SelectItem value="park">🌳 {t('filterPark', language)}</SelectItem>
+              <SelectItem value="mall">🛍️ {t('filterMall', language)}</SelectItem>
+              <SelectItem value="hotel">🏨 {t('filterHotel', language)}</SelectItem>
+              <SelectItem value="market">🏪 {t('filterMarket', language)}</SelectItem>
               <SelectItem value="hospital">🏥 {t('filterHospital', language)}</SelectItem>
               <SelectItem value="cafe">☕ {t('filterCafe', language)}</SelectItem>
               <SelectItem value="school">🏫 {t('filterSchool', language)}</SelectItem>
               <SelectItem value="government">🏛️ {t('filterGovernment', language)}</SelectItem>
               <SelectItem value="transport">🚉 {t('filterTransport', language)}</SelectItem>
+              <SelectItem value="entertainment">🎭 {t('filterEntertainment', language)}</SelectItem>
               <SelectItem value="other">📍 {t('filterOther', language)}</SelectItem>
             </SelectContent>
           </Select>
@@ -131,6 +139,7 @@ export default function SearchFilterBar() {
               <SelectItem value="all">{t('filterAll', language)}</SelectItem>
               <SelectItem value="alexandria">{t('filterAlexandria', language)}</SelectItem>
               <SelectItem value="cairo">{t('filterCairo', language)}</SelectItem>
+              <SelectItem value="giza">{t('filterGiza', language)}</SelectItem>
             </SelectContent>
           </Select>
           <Select value={categoryFilter || 'all'} onValueChange={setCategoryFilter}>
@@ -139,12 +148,19 @@ export default function SearchFilterBar() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t('filterAll', language)}</SelectItem>
+              <SelectItem value="museum">🏛️ {t('filterMuseum', language)}</SelectItem>
+              <SelectItem value="monument">🗿 {t('filterMonument', language)}</SelectItem>
               <SelectItem value="mosque">🕌 {t('filterMosque', language)}</SelectItem>
+              <SelectItem value="park">🌳 {t('filterPark', language)}</SelectItem>
+              <SelectItem value="mall">🛍️ {t('filterMall', language)}</SelectItem>
+              <SelectItem value="hotel">🏨 {t('filterHotel', language)}</SelectItem>
+              <SelectItem value="market">🏪 {t('filterMarket', language)}</SelectItem>
               <SelectItem value="hospital">🏥 {t('filterHospital', language)}</SelectItem>
               <SelectItem value="cafe">☕ {t('filterCafe', language)}</SelectItem>
               <SelectItem value="school">🏫 {t('filterSchool', language)}</SelectItem>
               <SelectItem value="government">🏛️ {t('filterGovernment', language)}</SelectItem>
               <SelectItem value="transport">🚉 {t('filterTransport', language)}</SelectItem>
+              <SelectItem value="entertainment">🎭 {t('filterEntertainment', language)}</SelectItem>
               <SelectItem value="other">📍 {t('filterOther', language)}</SelectItem>
             </SelectContent>
           </Select>

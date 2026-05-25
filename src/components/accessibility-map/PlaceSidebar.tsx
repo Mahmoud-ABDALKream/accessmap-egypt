@@ -39,14 +39,28 @@ function getScoreLabelBg(score: number): string {
   return 'bg-red-50 text-red-600 border-red-200';
 }
 
+function getCityName(city: string, lang: 'en' | 'ar') {
+  if (city === 'alexandria') return lang === 'ar' ? 'الإسكندرية' : 'Alexandria';
+  if (city === 'cairo') return lang === 'ar' ? 'القاهرة' : 'Cairo';
+  if (city === 'giza') return lang === 'ar' ? 'الجيزة' : 'Giza';
+  return city;
+}
+
 function getCategoryIcon(category: string) {
   switch (category) {
+    case 'museum': return '🏛️';
+    case 'monument': return '🗿';
     case 'mosque': return '🕌';
+    case 'park': return '🌳';
+    case 'mall': return '🛍️';
+    case 'hotel': return '🏨';
+    case 'market': return '🏪';
     case 'hospital': return '🏥';
     case 'cafe': return '☕';
     case 'school': return '🏫';
     case 'government': return '🏛️';
     case 'transport': return '🚉';
+    case 'entertainment': return '🎭';
     default: return '📍';
   }
 }
@@ -198,7 +212,7 @@ export default function PlaceSidebar() {
             </div>
             <Badge variant="outline" className="text-[10px] gap-1 h-5">
               <MapPin className="h-2.5 w-2.5" />
-              {place.city === 'alexandria' ? t('filterAlexandria', language) : t('filterCairo', language)}
+              {getCityName(place.city, language)}
             </Badge>
           </div>
 
@@ -379,7 +393,7 @@ export default function PlaceSidebar() {
                 </div>
                 <span className="text-[11px] text-gray-400 flex items-center gap-0.5">
                   <MapPin className="h-3 w-3" />
-                  {place.city === 'alexandria' ? t('filterAlexandria', language) : t('filterCairo', language)}
+                  {getCityName(place.city, language)}
                 </span>
               </div>
             </div>
