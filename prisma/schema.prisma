@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Place {
+  id            String   @id @default(cuid())
+  name          String
+  nameAr        String   @default("")
+  category      String   // mosque, hospital, cafe, school, government, transport, other
+  city          String   // alexandria, cairo
+  latitude      Float
+  longitude     Float
+  overallScore  Float    @default(0)
+  rampScore     Int      @default(0)
+  elevatorScore Int      @default(0)
+  bathroomScore Int      @default(0)
+  parkingScore  Int      @default(0)
+  entranceScore Int      @default(0)
+  reviewText    String   @default("")
+  photoPath     String   @default("")
+  submittedAt   DateTime @default(now())
+  approved      Boolean  @default(false)
+
+  reviews Review[]
+  edits   EditSuggestion[]
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  placeId   String
+  place     Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  text      String
+  rating    Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model EditSuggestion {
+  id        String   @id @default(cuid())
+  placeId   String
+  place     Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  field     String
+  currentValue String
+  suggestedValue String
+  reason    String   @default("")
+  createdAt DateTime @default(now())
+  resolved  Boolean  @default(false)
+}
