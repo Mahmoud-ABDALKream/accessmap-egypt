@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useAppStore } from '@/lib/store';
 import { t } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,9 @@ import {
   Users,
   Accessibility,
   ChevronLeft,
+  Code2,
+  Eye,
+  Github,
 } from 'lucide-react';
 
 const stepItems = [
@@ -47,8 +51,14 @@ export default function AboutSection() {
       <div className="relative overflow-hidden bg-gradient-to-br from-teal-500 via-emerald-500 to-green-500 rounded-2xl p-8 text-center mb-8 shadow-lg">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.15),transparent_60%)]" />
         <div className="relative z-10">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4 animate-pulse">
-            <Accessibility className="h-10 w-10 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4 p-2">
+            <Image
+              src="/favicon-1024.png"
+              alt="AccessMap Egypt"
+              width={60}
+              height={60}
+              className="rounded-2xl"
+            />
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">{t('aboutTitle', language)}</h1>
           <p className="text-teal-100 text-sm max-w-md mx-auto">
@@ -133,6 +143,57 @@ export default function AboutSection() {
       <p className="text-[11px] text-gray-400 text-center leading-relaxed">
         {t('aboutDisclaimer', language)}
       </p>
+
+      {/* Creator & Branding Section */}
+      <div className="mt-10 border-t border-gray-100 pt-8">
+        {/* About the Creator */}
+        <div className="bg-white rounded-xl p-6 mb-6 border border-gray-100 shadow-sm border-l-4 border-l-teal-500">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 bg-teal-50 rounded-lg">
+              <Code2 className="h-5 w-5 text-teal-600" />
+            </div>
+            <h2 className="text-lg font-semibold text-gray-800">{t('aboutCreatorTitle', language)}</h2>
+          </div>
+          <p className="text-sm text-gray-600 leading-relaxed mb-4">{t('aboutCreatorText', language)}</p>
+          <div className="flex items-start gap-2 bg-teal-50/50 rounded-lg p-3">
+            <Eye className="h-4 w-4 text-teal-600 mt-0.5 shrink-0" />
+            <p className="text-sm text-teal-700 leading-relaxed font-medium">{t('aboutCreatorVision', language)}</p>
+          </div>
+        </div>
+
+        {/* Built With */}
+        <div className="bg-gradient-to-r from-gray-50 to-teal-50/20 rounded-xl p-5 mb-6 border border-gray-100">
+          <div className="flex items-center gap-2 mb-2">
+            <Github className="h-4 w-4 text-gray-500" />
+            <h3 className="text-sm font-semibold text-gray-700">{t('aboutTechTitle', language)}</h3>
+          </div>
+          <p className="text-xs text-gray-500 leading-relaxed">{t('aboutTechDesc', language)}</p>
+          <div className="flex flex-wrap gap-2 mt-3">
+            {['Next.js', 'React', 'TypeScript', 'Leaflet', 'Prisma', 'shadcn/ui', 'Tailwind CSS'].map((tech) => (
+              <span key={tech} className="inline-flex items-center px-2 py-0.5 rounded-md bg-white border border-gray-200 text-[10px] font-medium text-gray-600">
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Ownership Stamp */}
+        <div className="text-center py-4">
+          <div className="inline-flex items-center gap-2 mb-2">
+            <Image
+              src="/favicon-1024.png"
+              alt="AccessMap Egypt"
+              width={32}
+              height={32}
+              className="rounded-xl shadow-md shadow-teal-200/50"
+            />
+            <span className="text-sm font-bold text-gray-800">{t('appName', language)}</span>
+          </div>
+          <p className="text-xs text-gray-400">{t('footerMadeWith', language)}</p>
+          <p className="text-[10px] text-gray-300 mt-1">{t('footerCopyright', language)}</p>
+          <p className="text-[10px] text-teal-500 font-medium mt-0.5">{t('footerOpenSource', language)}</p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -144,6 +144,19 @@ export const translations = {
     score4: 'Good',
     score5: 'Excellent',
 
+    // Footer & Branding
+    footerTagline: 'Making Egypt accessible for everyone',
+    footerMadeWith: 'Made with ♥ for accessibility',
+    footerCopyright: '© 2024 AccessMap Egypt. All rights reserved.',
+    footerBuiltBy: 'Built by the community, for the community',
+    footerOpenSource: 'Open Source Community Project',
+    footerVersion: 'v1.0.0',
+    aboutCreatorTitle: 'About the Creator',
+    aboutCreatorText: 'AccessMap Egypt was created to bridge the accessibility information gap in Egyptian cities. This platform empowers people with disabilities, their families, and caregivers with the information they need to navigate public spaces confidently.',
+    aboutCreatorVision: 'Our vision is an Egypt where every person, regardless of ability, can access public spaces with dignity and independence.',
+    aboutTechTitle: 'Built With',
+    aboutTechDesc: 'Next.js, React, TypeScript, Leaflet, Prisma, and shadcn/ui — modern web technologies for an accessible future.',
+
     // Common
     loading: 'Loading...',
     error: 'An error occurred',
@@ -294,6 +307,19 @@ export const translations = {
     score3: 'متوسط',
     score4: 'جيد',
     score5: 'ممتاز',
+
+    // Footer & Branding
+    footerTagline: 'نجعل مصر متاحة للجميع',
+    footerMadeWith: 'صُنع بـ ♥ من أجل إمكانية الوصول',
+    footerCopyright: '© ٢٠٢٤ خريطة الوصول مصر. جميع الحقوق محفوظة.',
+    footerBuiltBy: 'بُني بواسطة المجتمع، من أجل المجتمع',
+    footerOpenSource: 'مشروع مجتمعي مفتوح المصدر',
+    footerVersion: 'الإصدار ١.٠.٠',
+    aboutCreatorTitle: 'عن المنشئ',
+    aboutCreatorText: 'أُنشئت خريطة الوصول مصر لسد فجوة المعلومات حول إمكانية الوصول في المدن المصرية. تمكّن هذه المنصة الأشخاص ذوي الإعاقة وعائلاتهم ومقدمي الرعاية بالمعلومات التي يحتاجونها للتنقل في الأماكن العامة بثقة.',
+    aboutCreatorVision: 'رؤيتنا هي مصر يستطيع فيها كل شخص، بغض النظر عن قدراته، الوصول إلى الأماكن العامة بكرامة واستقلالية.',
+    aboutTechTitle: 'بُني باستخدام',
+    aboutTechDesc: 'Next.js، React، TypeScript، Leaflet، Prisma، و shadcn/ui — تقنيات ويب حديثة لمستقبل أكثر إمكانية للوصول.',
 
     // Common
     loading: 'جاري التحميل...',
