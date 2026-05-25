@@ -14,14 +14,28 @@ import { toast } from 'sonner';
 
 function getCategoryIcon(category: string) {
   switch (category) {
+    case 'museum': return '🏛️';
+    case 'monument': return '🗿';
     case 'mosque': return '🕌';
+    case 'park': return '🌳';
+    case 'mall': return '🛍️';
+    case 'hotel': return '🏨';
+    case 'market': return '🏪';
     case 'hospital': return '🏥';
     case 'cafe': return '☕';
     case 'school': return '🏫';
     case 'government': return '🏛️';
     case 'transport': return '🚉';
+    case 'entertainment': return '🎭';
     default: return '📍';
   }
+}
+
+function getCityName(city: string, lang: 'en' | 'ar') {
+  if (city === 'alexandria') return lang === 'ar' ? 'الإسكندرية' : 'Alexandria';
+  if (city === 'cairo') return lang === 'ar' ? 'القاهرة' : 'Cairo';
+  if (city === 'giza') return lang === 'ar' ? 'الجيزة' : 'Giza';
+  return city;
 }
 
 function getScoreBg(score: number): string {
@@ -186,7 +200,7 @@ export default function AdminSection() {
                       )}
                       <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                         <Badge variant="outline" className="text-[10px] h-4 px-1">
-                          {place.city === 'alexandria' ? t('filterAlexandria', language) : t('filterCairo', language)}
+                          {getCityName(place.city, language)}
                         </Badge>
                         <span className={`px-1 py-0 rounded text-[10px] font-bold border ${getScoreLabelBg(place.overallScore)}`}>
                           {place.overallScore.toFixed(1)}

@@ -19,14 +19,28 @@ function getScoreBg(score: number): string {
 
 function getCategoryIcon(category: string) {
   switch (category) {
+    case 'museum': return '🏛️';
+    case 'monument': return '🗿';
     case 'mosque': return '🕌';
+    case 'park': return '🌳';
+    case 'mall': return '🛍️';
+    case 'hotel': return '🏨';
+    case 'market': return '🏪';
     case 'hospital': return '🏥';
     case 'cafe': return '☕';
     case 'school': return '🏫';
     case 'government': return '🏛️';
     case 'transport': return '🚉';
+    case 'entertainment': return '🎭';
     default: return '📍';
   }
+}
+
+function getCityName(city: string, lang: 'en' | 'ar') {
+  if (city === 'alexandria') return lang === 'ar' ? 'الإسكندرية' : 'Alexandria';
+  if (city === 'cairo') return lang === 'ar' ? 'القاهرة' : 'Cairo';
+  if (city === 'giza') return lang === 'ar' ? 'الجيزة' : 'Giza';
+  return city;
 }
 
 export default function StatsDashboard() {
@@ -138,7 +152,7 @@ export default function StatsDashboard() {
                       {isArabic && place.nameAr ? place.nameAr : place.name}
                     </p>
                     <span className="text-[11px] text-gray-400">
-                      {place.city === 'alexandria' ? t('filterAlexandria', language) : t('filterCairo', language)}
+                      {getCityName(place.city, language)}
                     </span>
                   </div>
                 </div>
