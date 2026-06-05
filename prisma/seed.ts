@@ -1,4 +1,5 @@
 import { db } from '../src/lib/db'
+import bcrypt from 'bcryptjs'
 
 interface LocationData {
   name: string
@@ -909,6 +910,27 @@ async function seed() {
   }
 
   console.log(`\n🎉 Seeded ${locations.length} locations successfully!`)
+
+  // ─── Seed Admin User ──────────────────────────────────────────────────────
+  console.log('\n👤 Seeding admin user...')
+  const adminEmail = 'admin@accessmap.eg'
+  const adminPassword = 'admin123'
+
+  const existingAdmin = await db.user.findUnique({ where: { email: adminEmail } })
+  if (!existingAdmin) {
+    const hashedPassword = await bcrypt.hash(adminPassword, 12)
+    await db.user.create({
+      data: {
+        email: adminEmail,
+        name: 'AccessMap Admin',
+        password: hashedPassword,
+        role: 'ADMIN',
+      },
+    })
+    console.log('✅ Admin user created: admin@accessmap.eg / admin123')
+  } else {
+    console.log('ℹ️  Admin user already exists, skipping.')
+  }
 }
 
 seed()

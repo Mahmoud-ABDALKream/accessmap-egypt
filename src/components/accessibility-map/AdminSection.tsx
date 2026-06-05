@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAppStore, type PlaceData } from '@/lib/store';
 import { t } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,19 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Lock, Check, Trash2, AlertCircle, ShieldCheck, ChevronLeft, CheckCircle2, Loader2 } from 'lucide-react';
+import {
+  Lock,
+  Check,
+  Trash2,
+  AlertCircle,
+  ShieldCheck,
+  ChevronLeft,
+  CheckCircle2,
+  Loader2,
+  LogOut,
+  Mail,
+  KeyRound,
+} from 'lucide-react';
 import { toast } from 'sonner';
 
 function getCategoryIcon(category: string) {
@@ -54,24 +66,63 @@ export default function AdminSection() {
   const { language, setCurrentView } = useAppStore();
   const isArabic = language === 'ar';
 
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [unapproved, setUnapproved] = useState<PlaceData[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const [unapproved, setUnapproved] = useState<PlaceData[]>([]);
   const [error, setError] = useState('');
 
-  const fetchUnapproved = async (pwd: string) => {
+  // Check existing session on mount
+  useEffect(() => {
+    async function checkSession() {
+      try {
+        const res = await fetch('/api/admin');
+        if (res.ok) {
+          const data = await res.json();
+          setUnapproved(Array.isArray(data) ? data : []);
+          setIsAdmin(true);
+        }
+      } catch {
+        // Not authenticated
+      }
+      setIsCheckingSession(false);
+    }
+    checkSession();
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) return;
+
     setIsLoading(true);
+    setError('');
+
     try {
-      const res = await fetch(`/api/admin?password=${encodeURIComponent(pwd)}`);
+      // Sign in with NextAuth credentials
+      const { signIn } = await import('next-auth/react');
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError(isArabic ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة' : 'Invalid email or password');
+        setIsLoading(false);
+        return;
+      }
+
+      // Fetch unapproved places
+      const res = await fetch('/api/admin');
       if (res.ok) {
         const data = await res.json();
-        setUnapproved(data);
-        setIsAuthenticated(true);
-        setError('');
+        setUnapproved(Array.isArray(data) ? data : []);
+        setIsAdmin(true);
+        toast.success(isArabic ? 'تم تسجيل الدخول بنجاح' : 'Logged in successfully');
       } else {
-        setError(t('adminWrongPassword', language));
-        setIsAuthenticated(false);
+        setError(isArabic ? 'ليس لديك صلاحيات الإدارة' : 'You do not have admin privileges');
       }
     } catch {
       setError(t('error', language));
@@ -79,21 +130,43 @@ export default function AdminSection() {
     setIsLoading(false);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    fetchUnapproved(password);
+  const handleLogout = async () => {
+    try {
+      const { signOut } = await import('next-auth/react');
+      await signOut({ redirect: false });
+      setIsAdmin(false);
+      setUnapproved([]);
+      setEmail('');
+      setPassword('');
+      toast.success(isArabic ? 'تم تسجيل الخروج' : 'Logged out');
+    } catch {
+      // ignore
+    }
   };
+
+  const fetchUnapproved = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin');
+      if (res.ok) {
+        const data = await res.json();
+        setUnapproved(Array.isArray(data) ? data : []);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
 
   const handleApprove = async (id: string) => {
     try {
       const res = await fetch('/api/admin', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, password }),
+        body: JSON.stringify({ id }),
       });
       if (res.ok) {
         setUnapproved((prev) => prev.filter((p) => p.id !== id));
-        toast.success('Approved');
+        toast.success(isArabic ? 'تمت الموافقة' : 'Approved');
+        fetchUnapproved();
       }
     } catch {
       // ignore
@@ -101,23 +174,37 @@ export default function AdminSection() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Delete this submission?')) return;
+    if (!confirm(isArabic ? 'حذف هذا الإرسال؟' : 'Delete this submission?')) return;
     try {
       const res = await fetch('/api/admin', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, password }),
+        body: JSON.stringify({ id }),
       });
       if (res.ok) {
         setUnapproved((prev) => prev.filter((p) => p.id !== id));
-        toast.success('Deleted');
+        toast.success(isArabic ? 'تم الحذف' : 'Deleted');
+        fetchUnapproved();
       }
     } catch {
       // ignore
     }
   };
 
-  if (!isAuthenticated) {
+  // Loading state while checking session
+  if (isCheckingSession) {
+    return (
+      <div className="view-fade-in flex items-center justify-center min-h-[60vh]" dir={isArabic ? 'rtl' : 'ltr'}>
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 text-teal-500 animate-spin mx-auto mb-3" />
+          <p className="text-sm text-gray-400">{t('loading', language)}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Login form
+  if (!isAdmin) {
     return (
       <div className="view-fade-in max-w-sm mx-auto p-4 min-h-[60vh] flex flex-col justify-center" dir={isArabic ? 'rtl' : 'ltr'}>
         {/* Back button */}
@@ -135,22 +222,48 @@ export default function AdminSection() {
               <Lock className="h-7 w-7 text-teal-600" />
             </div>
             <h1 className="text-xl font-bold text-gray-800">{t('adminTitle', language)}</h1>
-            <p className="text-xs text-gray-500 mt-1">{isArabic ? 'أدخل كلمة المرور للوصول' : 'Enter password to access'}</p>
+            <p className="text-xs text-gray-500 mt-1">
+              {isArabic ? 'سجّل دخولك للوصول إلى لوحة الإدارة' : 'Sign in to access the admin panel'}
+            </p>
           </div>
           <CardContent className="p-6">
             <form onSubmit={handleLogin}>
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="admin-pwd" className="text-sm font-medium">{t('adminPassword', language)}</Label>
-                  <Input
-                    id="admin-pwd"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder={t('adminPasswordPlaceholder', language)}
-                    className="h-12 text-sm mt-1.5"
-                    dir="ltr"
-                  />
+                  <Label htmlFor="admin-email" className="text-sm font-medium">
+                    {isArabic ? 'البريد الإلكتروني' : 'Email'}
+                  </Label>
+                  <div className="relative mt-1.5">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      id="admin-email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="admin@accessmap.eg"
+                      className="h-12 text-sm pl-10"
+                      dir="ltr"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="admin-pwd" className="text-sm font-medium">
+                    {isArabic ? 'كلمة المرور' : 'Password'}
+                  </Label>
+                  <div className="relative mt-1.5">
+                    <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      id="admin-pwd"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder={isArabic ? 'أدخل كلمة المرور' : 'Enter password'}
+                      className="h-12 text-sm pl-10"
+                      dir="ltr"
+                      required
+                    />
+                  </div>
                 </div>
                 {error && (
                   <div className="flex items-center gap-2 text-red-600 bg-red-50 p-3 rounded-xl text-sm border border-red-100">
@@ -160,7 +273,7 @@ export default function AdminSection() {
                 )}
                 <Button
                   type="submit"
-                  disabled={!password || isLoading}
+                  disabled={!email || !password || isLoading}
                   className="w-full h-12 text-sm bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 rounded-xl font-semibold shadow-lg shadow-teal-200/40 transition-all hover:shadow-xl hover:shadow-teal-300/40 disabled:opacity-50 disabled:shadow-none"
                 >
                   {isLoading ? (
@@ -178,6 +291,7 @@ export default function AdminSection() {
     );
   }
 
+  // Admin panel
   return (
     <div className="view-fade-in max-w-2xl mx-auto p-4" dir={isArabic ? 'rtl' : 'ltr'}>
       {/* Header */}
@@ -194,6 +308,15 @@ export default function AdminSection() {
         }`}>
           {unapproved.length} {isArabic ? 'معلق' : 'pending'}
         </Badge>
+        <Button
+          onClick={handleLogout}
+          variant="ghost"
+          size="sm"
+          className="text-gray-400 hover:text-red-500 hover:bg-red-50 gap-1.5 h-8 px-2"
+        >
+          <LogOut className="h-3.5 w-3.5" />
+          <span className="text-xs">{isArabic ? 'خروج' : 'Logout'}</span>
+        </Button>
       </div>
 
       {unapproved.length === 0 ? (

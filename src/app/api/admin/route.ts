@@ -1,19 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-const ADMIN_PASSWORD = 'accessmap2024';
-
-function checkPassword(password: string | null): boolean {
-  return password === ADMIN_PASSWORD;
-}
+import { auth } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const password = searchParams.get('password');
-
-    if (!checkPassword(password)) {
+    // Auth check is handled by middleware, but we double-check here
+    const session = await auth();
+    if (!session?.user || session.user.role !== 'ADMIN') {
       return NextResponse.json(
-        { error: 'Unauthorized: Invalid password' },
+        { error: 'Unauthorized: Admin access required' },
         { status: 401 }
       );
     }
@@ -45,15 +39,16 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { id, password } = body;
-
-    if (!checkPassword(password)) {
+    const session = await auth();
+    if (!session?.user || session.user.role !== 'ADMIN') {
       return NextResponse.json(
-        { error: 'Unauthorized: Invalid password' },
+        { error: 'Unauthorized: Admin access required' },
         { status: 401 }
       );
     }
+
+    const body = await request.json();
+    const { id } = body;
 
     if (!id) {
       return NextResponse.json(
@@ -95,15 +90,16 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { id, password } = body;
-
-    if (!checkPassword(password)) {
+    const session = await auth();
+    if (!session?.user || session.user.role !== 'ADMIN') {
       return NextResponse.json(
-        { error: 'Unauthorized: Invalid password' },
+        { error: 'Unauthorized: Admin access required' },
         { status: 401 }
       );
     }
+
+    const body = await request.json();
+    const { id } = body;
 
     if (!id) {
       return NextResponse.json(

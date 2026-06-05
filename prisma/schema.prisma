@@ -7,17 +7,70 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// NOTE: For Vercel deployment, SQLite is not supported.
-// The app uses fallback static data when the database is unavailable.
-// Set DATABASE_URL environment variable on Vercel to any valid SQLite path
-// (e.g., "file:./dev.db") just so Prisma Client can be generated.
+// ─── Auth.js Models ──────────────────────────────────────────────────────────
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(USER)
+
+  accounts Account[]
+  sessions Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── Application Models ──────────────────────────────────────────────────────
 
 model Place {
   id            String   @id @default(cuid())
   name          String
   nameAr        String   @default("")
-  category      String   // mosque, hospital, cafe, school, government, transport, other
-  city          String   // alexandria, cairo
+  category      String
+  city          String
   latitude      Float
   longitude     Float
   overallScore  Float    @default(0)
