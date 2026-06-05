@@ -10,6 +10,7 @@
 Discover, rate, and review the physical accessibility of public places for people with disabilities — in Arabic and English.
 
 [![Live Demo](https://img.shields.io/badge/🌐%20Live%20Demo-accessmap--egypt.vercel.app-teal?style=for-the-badge)](https://accessmap-egypt.vercel.app)
+[![CI](https://github.com/Mahmoud-ABDALKream/accessmap-egypt/actions/workflows/ci.yml/badge.svg)](https://github.com/Mahmoud-ABDALKream/accessmap-egypt/actions/workflows/ci.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=nextdotjs)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
@@ -30,6 +31,8 @@ Discover, rate, and review the physical accessibility of public places for peopl
 - [Database Setup](#-database-setup)
 - [Available Scripts](#-available-scripts)
 - [API Reference](#-api-reference)
+- [Testing](#-testing)
+- [CI/CD](#-cicd)
 - [Contributing](#-contributing)
 
 ---
@@ -84,6 +87,12 @@ The project was built as a social-good initiative to improve urban accessibility
 - [Prisma ORM](https://www.prisma.io/) with SQLite
 - [Multer](https://github.com/expressjs/multer) — file uploads
 - [NextAuth.js](https://next-auth.js.org/) — authentication
+
+**Testing & CI**
+- [Vitest](https://vitest.dev/) — unit tests with jsdom
+- [Playwright](https://playwright.dev/) — end-to-end browser tests
+- [MSW](https://mswjs.io/) — API mocking for unit tests
+- [GitHub Actions](https://github.com/features/actions) — CI/CD pipeline
 
 **Tooling**
 - [Bun](https://bun.sh/) — package manager & runtime
@@ -228,6 +237,11 @@ The seed script populates the database with **46 real locations** across:
 | `bun run build` | Build for production |
 | `bun run start` | Start production server |
 | `bun run lint` | Run ESLint |
+| `bun run test` | Run unit tests (Vitest) |
+| `bun run test:watch` | Run unit tests in watch mode |
+| `bun run test:coverage` | Run unit tests with coverage report |
+| `bun run test:e2e` | Run end-to-end tests (Playwright) |
+| `bun run type-check` | Run TypeScript type checking |
 | `bun run db:push` | Sync Prisma schema to database |
 | `bun run db:generate` | Generate Prisma client |
 | `bun run db:migrate` | Run database migrations |
@@ -289,6 +303,86 @@ Map markers are color-coded by **overall score**:
 - 🟢 **Green** — Score ≥ 3.5 (Good Accessibility)
 - 🟡 **Yellow** — Score 2–3.5 (Moderate Accessibility)
 - 🔴 **Red** — Score < 2 (Poor Accessibility)
+
+---
+
+## 🧪 Testing
+
+### Unit Tests (Vitest)
+
+Unit tests use [Vitest](https://vitest.dev/) with [jsdom](https://github.com/jsdom/jsdom) environment and [MSW](https://mswjs.io/) for API mocking.
+
+```bash
+# Run all unit tests
+bun run test
+
+# Run tests in watch mode
+bun run test:watch
+
+# Run with coverage report
+bun run test:coverage
+
+# Run a specific test file
+bunx vitest run src/__tests__/api/places.test.ts
+```
+
+Test files are located in `src/__tests__/`:
+- `api/places.test.ts` — GET/POST /api/places, GET /api/places/:id, POST reviews
+- `api/stats.test.ts` — GET /api/stats
+- `components/PlaceSidebar.test.tsx` — Place detail panel rendering
+- `store/useSearchFilter.test.ts` — Zustand store search/filter logic
+
+### End-to-End Tests (Playwright)
+
+E2E tests run a real browser against the dev server.
+
+```bash
+# Install Playwright browsers (first time only)
+bunx playwright install --with-deps chromium
+
+# Run E2E tests
+bun run test:e2e
+
+# Run with interactive UI
+bun run test:e2e:ui
+
+# Run a specific test file
+bunx playwright test e2e/homepage.spec.ts
+```
+
+E2E test files are in `e2e/`:
+- `homepage.spec.ts` — Page load, map, navigation
+- `search.spec.ts` — Search and filter functionality
+- `language.spec.ts` — Arabic/English toggle, RTL
+- `admin.spec.ts` — Admin login, auth protection
+- `submit.spec.ts` — Submit form validation
+
+### Test Environment
+
+A separate `.env.test` file configures the test environment:
+- Uses `file:./db/test.db` as test database
+- Sets `AUTH_SECRET` for NextAuth
+- Sets `NODE_ENV=test`
+
+---
+
+## 🔄 CI/CD
+
+GitHub Actions runs on every push and PR to `main`:
+
+[![CI](https://github.com/Mahmoud-ABDALKream/accessmap-egypt/actions/workflows/ci.yml/badge.svg)](https://github.com/Mahmoud-ABDALKream/accessmap-egypt/actions/workflows/ci.yml)
+
+**Pipeline Jobs:**
+
+| Job | Description |
+|---|---|
+| **Lint** | ESLint code quality check |
+| **Type Check** | `tsc --noEmit` TypeScript validation |
+| **Build** | `next build` production build |
+| **Unit Tests** | Vitest with jsdom |
+| **E2E Tests** | Playwright browser tests (Chromium) |
+
+All jobs use **Bun** for dependency installation and caching.
 
 ---
 
