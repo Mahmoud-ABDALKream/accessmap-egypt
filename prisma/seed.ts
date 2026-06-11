@@ -913,23 +913,27 @@ async function seed() {
 
   // ─── Seed Admin User ──────────────────────────────────────────────────────
   console.log('\n👤 Seeding admin user...')
-  const adminEmail = 'admin@accessmap.eg'
-  const adminPassword = 'admin123'
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@accessmap.eg'
+  const adminPassword = process.env.ADMIN_PASSWORD
 
-  const existingAdmin = await db.user.findUnique({ where: { email: adminEmail } })
-  if (!existingAdmin) {
-    const hashedPassword = await bcrypt.hash(adminPassword, 12)
-    await db.user.create({
-      data: {
-        email: adminEmail,
-        name: 'AccessMap Admin',
-        password: hashedPassword,
-        role: 'ADMIN',
-      },
-    })
-    console.log('✅ Admin user created: admin@accessmap.eg / admin123')
+  if (!adminPassword) {
+    console.log('⚠️  ADMIN_PASSWORD env var not set — skipping admin user seed.')
   } else {
-    console.log('ℹ️  Admin user already exists, skipping.')
+    const existingAdmin = await db.user.findUnique({ where: { email: adminEmail } })
+    if (!existingAdmin) {
+      const hashedPassword = await bcrypt.hash(adminPassword, 12)
+      await db.user.create({
+        data: {
+          email: adminEmail,
+          name: 'AccessMap Admin',
+          password: hashedPassword,
+          role: 'ADMIN',
+        },
+      })
+      console.log('✅ Admin user created successfully')
+    } else {
+      console.log('ℹ️  Admin user already exists, skipping.')
+    }
   }
 }
 

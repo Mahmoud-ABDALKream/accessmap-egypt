@@ -18,7 +18,6 @@ import {
   PlusCircle,
   BarChart3,
   Info,
-  Shield,
   Languages,
   Accessibility,
   Menu,
@@ -60,10 +59,11 @@ export default function Home() {
     fetchPlaces();
   }, [fetchPlaces]);
 
-  // Check for place ID in URL
+  // Check for place ID or admin view in URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const placeId = params.get('place');
+    const viewParam = params.get('view');
     if (placeId) {
       fetch(`/api/places/${placeId}`)
         .then((res) => res.json())
@@ -74,6 +74,9 @@ export default function Home() {
         })
         .catch(() => {});
     }
+    if (viewParam === 'admin') {
+      setCurrentView('admin' as Parameters<typeof setCurrentView>[0]);
+    }
   }, []);
 
   const navItems = [
@@ -81,7 +84,6 @@ export default function Home() {
     { view: 'submit' as const, icon: PlusCircle, label: t('navSubmit', language) },
     { view: 'stats' as const, icon: BarChart3, label: t('navStats', language) },
     { view: 'about' as const, icon: Info, label: t('navAbout', language) },
-    { view: 'admin' as const, icon: Shield, label: t('navAdmin', language) },
   ];
 
   return (
@@ -231,8 +233,8 @@ export default function Home() {
           </div>
         )}
 
-        {/* Admin View */}
-        {currentView === 'admin' && (
+        {/* Admin View — hidden from navigation, accessible via /?view=admin */}
+        {currentView === ('admin' as string) && (
           <div className="h-full overflow-y-auto view-fade-in">
             <AdminSection />
           </div>

@@ -189,12 +189,12 @@ Create a `.env` file in the root directory:
 # SQLite database path (relative or absolute)
 DATABASE_URL=file:./db/custom.db
 
-# NextAuth secret (generate with: openssl rand -base64 32)
-NEXTAUTH_SECRET=your_secret_here
-NEXTAUTH_URL=http://localhost:3000
+# Auth.js secret (generate with: openssl rand -base64 32)
+AUTH_SECRET=your_secret_here
 
-# Admin panel password
-ADMIN_PASSWORD=accessmap2024
+# Admin seed credentials (used only by prisma/seed.ts)
+# ADMIN_EMAIL=admin@accessmap.eg
+# ADMIN_PASSWORD=your-secure-admin-password
 ```
 
 > ⚠️ **Never commit your `.env` file.** It is listed in `.gitignore`.

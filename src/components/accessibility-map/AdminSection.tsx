@@ -240,7 +240,7 @@ export default function AdminSection() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="admin@accessmap.eg"
+                      placeholder={isArabic ? 'أدخل البريد الإلكتروني' : 'Enter email'}
                       className="h-12 text-sm pl-10"
                       dir="ltr"
                       required

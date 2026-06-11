@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { Language } from './i18n';
 
-export type ViewMode = 'map' | 'submit' | 'stats' | 'about' | 'admin';
+export type ViewMode = 'map' | 'submit' | 'stats' | 'about';
 
 export interface PlaceData {
   id: string;
