@@ -20,12 +20,11 @@ test.describe('Homepage', () => {
   });
 
   test('navigation tabs are visible on desktop', async ({ page }) => {
-    // Desktop navigation items
+    // Desktop navigation items (Admin is intentionally hidden — accessed via /?view=admin)
     await expect(page.getByRole('button', { name: /Map/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Submit Place/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Statistics/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /About/ })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Admin/ })).toBeVisible();
   });
 
   test('footer is visible on desktop', async ({ page }) => {
