@@ -57,3 +57,11 @@ prompt
 server.log
 # Skills directory
 /skills/
+
+# Agent context (internal AI working files, not for public repo)
+/agent-ctx/
+worklog.md
+
+# Internal runtime scripts state
+.zscripts/dev.pid
+.zscripts/dev.log
