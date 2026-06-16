@@ -24,19 +24,19 @@ test.describe('Submit Place Form', () => {
     await page.waitForTimeout(1000);
 
     // Check for place name input
-    const nameInput = page.getByLabel(/Place Name|اسم المكان/);
+    const nameInput = page.getByLabel(/Place Name|اسم المكان/).first();
     if (await nameInput.isVisible()) {
       await expect(nameInput).toBeVisible();
     }
 
     // Check for latitude input
-    const latInput = page.getByLabel(/Latitude|خط العرض/);
+    const latInput = page.getByLabel(/Latitude|خط العرض/).first();
     if (await latInput.isVisible()) {
       await expect(latInput).toBeVisible();
     }
 
     // Check for longitude input
-    const lngInput = page.getByLabel(/Longitude|خط الطول/);
+    const lngInput = page.getByLabel(/Longitude|خط الطول/).first();
     if (await lngInput.isVisible()) {
       await expect(lngInput).toBeVisible();
     }

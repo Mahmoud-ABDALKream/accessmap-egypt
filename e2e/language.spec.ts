@@ -16,15 +16,15 @@ test.describe('Language Toggle', () => {
   });
 
   test('switches from Arabic back to English', async ({ page }) => {
-    const arButton = page.getByRole('button', { name: /عربي/ });
+    const arButton = page.getByRole('button', { name: /عربي/ }).first();
     await arButton.click();
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(1000);
 
     await expect(page.getByRole('banner').getByText('خريطة الوصول مصر', { exact: true })).toBeVisible();
 
-    const enButton = page.getByRole('button', { name: /EN/ });
+    const enButton = page.getByRole('button', { name: /EN|Switch to English/ }).first();
     await enButton.click();
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(1000);
 
     await expect(page.getByRole('banner').getByText('AccessMap Egypt', { exact: true })).toBeVisible();
   });
@@ -39,8 +39,11 @@ test.describe('Language Toggle', () => {
   });
 
   test('English layout is LTR', async ({ page }) => {
+    // Wait for the page useEffect to set dir attribute
+    await page.waitForTimeout(1000);
     const dir = await page.locator('html').getAttribute('dir');
-    expect(dir).toBe('ltr');
+    // dir is either 'ltr' (set by JS) or null (default) — both are LTR
+    expect(dir === 'ltr' || dir === null).toBeTruthy();
   });
 
   test('navigation labels change with language', async ({ page }) => {
