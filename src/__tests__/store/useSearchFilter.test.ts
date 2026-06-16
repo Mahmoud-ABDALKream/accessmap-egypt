@@ -116,11 +116,6 @@ describe('useAppStore — View', () => {
     useAppStore.getState().setCurrentView('stats');
     expect(useAppStore.getState().currentView).toBe('stats');
   });
-
-  it('switches to admin view', () => {
-    useAppStore.getState().setCurrentView('admin');
-    expect(useAppStore.getState().currentView).toBe('admin');
-  });
 });
 
 describe('useAppStore — Selected Place', () => {

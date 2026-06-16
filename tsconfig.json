@@ -23,6 +23,10 @@
         "name": "next"
       }
     ],
+    "types": [
+      "vitest/globals",
+      "node"
+    ],
     "paths": {
       "@/*": [
         "./src/*"
@@ -37,6 +41,11 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "examples",
+    "e2e",
+    "playwright-report",
+    "test-results",
+    "skills"
   ]
 }
