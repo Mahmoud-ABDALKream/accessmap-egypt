@@ -14,13 +14,11 @@ test.describe('Homepage', () => {
   });
 
   test('map container loads', async ({ page }) => {
-    // Wait for the map container to render (Leaflet is dynamically imported)
-    const mapContainer = page.locator('[data-testid="map-container"], .leaflet-container').first();
+    const mapContainer = page.locator('.leaflet-container').first();
     await expect(mapContainer).toBeVisible({ timeout: 10000 });
   });
 
   test('navigation tabs are visible on desktop', async ({ page }) => {
-    // Desktop navigation items (Admin is intentionally hidden — accessed via /?view=admin)
     await expect(page.getByRole('button', { name: /Map/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Submit Place/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Statistics/ })).toBeVisible();
@@ -28,7 +26,7 @@ test.describe('Homepage', () => {
   });
 
   test('footer is visible on desktop', async ({ page }) => {
-    const footer = page.locator('footer');
+    const footer = page.locator('footer').first();
     await expect(footer).toBeVisible();
     await expect(footer.getByText('AccessMap Egypt', { exact: true })).toBeVisible();
   });
@@ -39,17 +37,13 @@ test.describe('Homepage', () => {
   });
 
   test('search bar is visible', async ({ page }) => {
-    const searchInput = page.getByPlaceholder(/Search places by name or category/);
+    const searchInput = page.getByPlaceholder(/Search places by name or category/).first();
     await expect(searchInput).toBeVisible();
   });
 
   test('places are loaded and displayed', async ({ page }) => {
-    // Wait for places to load (markers on the map)
     await page.waitForTimeout(3000);
-    // Check that the places count badge or some marker is visible
-    const markerElements = page.locator('.leaflet-marker-icon, .custom-marker');
-    // Either markers or fallback data is shown
-    const placesBadge = page.getByText(/places|مكان/);
-    await expect(placesBadge.or(markerElements.first())).toBeVisible({ timeout: 10000 });
+    const markerElements = page.locator('.leaflet-marker-icon');
+    await expect(markerElements.first()).toBeVisible({ timeout: 10000 });
   });
 });
