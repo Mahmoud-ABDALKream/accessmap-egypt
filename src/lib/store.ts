@@ -92,6 +92,11 @@ interface AppState {
   // Loading
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
+
+  // Initial load latch — true once the first /api/places fetch has settled
+  // (success or failure). Used to keep the themed loading screen visible
+  // only during the genuine first load, never on subsequent refetches.
+  hasInitiallyLoaded: boolean;
 }
 
 // Helper to safely parse API response as array
@@ -121,13 +126,13 @@ export const useAppStore = create<AppState>((set, get) => ({
       if (filters?.category) params.set('category', filters.category);
       const res = await fetch(`/api/places?${params.toString()}`);
       if (!res.ok) {
-        set({ places: [], isLoading: false });
+        set({ places: [], isLoading: false, hasInitiallyLoaded: true });
         return;
       }
       const data = await res.json();
-      set({ places: ensureArray<PlaceData>(data), isLoading: false });
+      set({ places: ensureArray<PlaceData>(data), isLoading: false, hasInitiallyLoaded: true });
     } catch {
-      set({ places: [], isLoading: false });
+      set({ places: [], isLoading: false, hasInitiallyLoaded: true });
     }
   },
 
@@ -177,4 +182,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   // Loading
   isLoading: false,
   setIsLoading: (loading) => set({ isLoading: loading }),
+
+  // Initial load latch
+  hasInitiallyLoaded: false,
 }));

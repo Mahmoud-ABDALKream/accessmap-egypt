@@ -599,3 +599,442 @@
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
+
+/* ─── Loading Screen (AccessMap Egypt themed) ───────────────────────────── */
+
+.am-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(1100px 700px at 50% 18%, rgba(13, 148, 136, 0.10), transparent 60%),
+    radial-gradient(900px 600px at 50% 88%, rgba(20, 184, 166, 0.08), transparent 60%),
+    linear-gradient(180deg, #f8fafc 0%, #f0fdfa 55%, #ecfeff 100%);
+  overflow: hidden;
+  animation: amLoaderFadeIn 0.35s ease-out forwards;
+}
+
+.am-loader--exit {
+  animation: amLoaderFadeOut 0.4s ease-in forwards;
+}
+
+@keyframes amLoaderFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes amLoaderFadeOut {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.02); }
+}
+
+/* Subtle grid background mimicking a map */
+.am-loader__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(13, 148, 136, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13, 148, 136, 0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 80%);
+  animation: amGridDrift 18s linear infinite;
+}
+
+@keyframes amGridDrift {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 44px 44px, 44px 44px; }
+}
+
+/* Floating Egyptian landmark silhouettes (subtle) */
+.am-loader__landmark {
+  position: absolute;
+  opacity: 0.06;
+  pointer-events: none;
+  color: #0f766e;
+}
+
+.am-loader__landmark--pyramids {
+  bottom: 8%;
+  left: 6%;
+  width: 220px;
+  height: auto;
+  animation: amFloatY 7s ease-in-out infinite;
+}
+
+.am-loader__landmark--pyramids-right {
+  bottom: 10%;
+  right: 7%;
+  width: 180px;
+  height: auto;
+  animation: amFloatY 8s ease-in-out infinite 1.2s;
+}
+
+@keyframes amFloatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Central radar stage */
+.am-loader__stage {
+  position: relative;
+  width: min(78vw, 320px);
+  height: min(78vw, 320px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Radar rings expanding outward */
+.am-radar-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(13, 148, 136, 0.35);
+  opacity: 0;
+  animation: amRadarPulse 2.4s ease-out infinite;
+}
+.am-radar-ring--2 { animation-delay: 0.8s; }
+.am-radar-ring--3 { animation-delay: 1.6s; }
+
+@keyframes amRadarPulse {
+  0% { transform: scale(0.35); opacity: 0; border-color: rgba(13, 148, 136, 0.55); }
+  20% { opacity: 1; }
+  100% { transform: scale(1); opacity: 0; border-color: rgba(13, 148, 136, 0.05); }
+}
+
+/* Rotating radar sweep */
+.am-radar-sweep {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(13, 148, 136, 0) 0deg,
+    rgba(13, 148, 136, 0) 300deg,
+    rgba(13, 148, 136, 0.18) 340deg,
+    rgba(20, 184, 166, 0.42) 360deg
+  );
+  mask: radial-gradient(circle, transparent 18%, #000 19%);
+  -webkit-mask: radial-gradient(circle, transparent 18%, #000 19%);
+  animation: amRadarSweep 3.2s linear infinite;
+}
+
+@keyframes amRadarSweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Center disc with accessibility icon */
+.am-loader__disc {
+  position: relative;
+  width: 42%;
+  height: 42%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0d9488 0%, #14b8a6 55%, #2dd4bf 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 12px 32px rgba(13, 148, 136, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -6px 14px rgba(0, 0, 0, 0.12);
+  z-index: 2;
+  animation: amDiscBob 3s ease-in-out infinite;
+}
+
+@keyframes amDiscBob {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-4px) scale(1.02); }
+}
+
+.am-loader__icon {
+  color: #fff;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+  animation: amIconPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes amIconPulse {
+  0%, 100% { transform: scale(1); opacity: 0.95; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+/* Orbiting map pins around the disc */
+.am-orbit {
+  position: absolute;
+  inset: 0;
+  animation: amOrbitSpin 12s linear infinite;
+}
+
+.am-orbit--rev {
+  animation: amOrbitSpin 16s linear infinite reverse;
+}
+
+@keyframes amOrbitSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Pin wrapper: rotated to its angle, child pin is translated outward.
+   This way the drop animation only needs to animate the outward translate. */
+.am-pin-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+}
+
+.am-pin {
+  position: absolute;
+  top: -7px;
+  left: -7px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50% 50% 50% 0;
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+  box-shadow: 0 3px 8px rgba(13, 148, 136, 0.4);
+  border: 2px solid #fff;
+  /* The -45deg makes the teardrop point downward. Combined with scale for the drop animation. */
+  animation: amPinDrop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) backwards,
+             amPinBlink 2.4s ease-in-out infinite 0.8s;
+}
+
+@keyframes amPinBlink {
+  0%, 100% { opacity: 1; transform: rotate(-45deg) scale(1); box-shadow: 0 3px 8px rgba(13, 148, 136, 0.4); }
+  50% { opacity: 0.75; transform: rotate(-45deg) scale(1.05); box-shadow: 0 3px 14px rgba(20, 184, 166, 0.7); }
+}
+
+@keyframes amPinDrop {
+  0% { opacity: 0; transform: rotate(-45deg) scale(0.3); }
+  60% { opacity: 1; transform: rotate(-45deg) scale(1.15); }
+  100% { opacity: 1; transform: rotate(-45deg) scale(1); }
+}
+
+/* Brand text */
+.am-loader__brand {
+  text-align: center;
+  margin-top: 8px;
+}
+
+.am-loader__title {
+  font-size: clamp(20px, 4.5vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 50%, #14b8a6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: amTitleReveal 0.7s ease-out 0.2s backwards;
+}
+
+@keyframes amTitleReveal {
+  from { opacity: 0; transform: translateY(8px); letter-spacing: 0; }
+  to { opacity: 1; transform: translateY(0); letter-spacing: -0.02em; }
+}
+
+.am-loader__subtitle {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+  animation: amTitleReveal 0.7s ease-out 0.4s backwards;
+}
+
+/* Status text with animated dots */
+.am-loader__status {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #475569;
+  font-weight: 600;
+  animation: amTitleReveal 0.7s ease-out 0.6s backwards;
+}
+
+.am-loader__dots {
+  display: inline-flex;
+  gap: 3px;
+  margin-left: 2px;
+}
+
+.am-loader__dots span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #0d9488;
+  animation: amDotBounce 1.2s ease-in-out infinite;
+}
+
+.am-loader__dots span:nth-child(2) { animation-delay: 0.15s; }
+.am-loader__dots span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes amDotBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+.am-loader__hint {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 500;
+  text-align: center;
+  animation: amTitleReveal 0.7s ease-out 0.8s backwards;
+}
+
+/* Route-style progress bar (dashed line like a map route) */
+.am-loader__route {
+  position: relative;
+  margin-top: 22px;
+  width: min(80vw, 280px);
+  height: 6px;
+  background: rgba(13, 148, 136, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+  animation: amTitleReveal 0.7s ease-out 1s backwards;
+}
+
+.am-loader__route::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(13, 148, 136, 0.18) 0 6px,
+    transparent 6px 12px
+  );
+}
+
+.am-loader__route-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #0d9488, #14b8a6, #2dd4bf);
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgba(20, 184, 166, 0.6);
+  animation: amRouteFill 2.6s ease-in-out infinite;
+}
+
+@keyframes amRouteFill {
+  0% { width: 0%; }
+  50% { width: 78%; }
+  100% { width: 100%; opacity: 1; }
+}
+
+.am-loader__route-pin {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  margin-top: -6px;
+  margin-left: -6px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: #fff;
+  border: 2.5px solid #0d9488;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.4);
+  animation: amRoutePinTravel 2.6s ease-in-out infinite;
+}
+
+@keyframes amRoutePinTravel {
+  0% { left: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+/* Steps indicator */
+.am-loader__steps {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 500;
+  animation: amTitleReveal 0.7s ease-out 1.2s backwards;
+}
+
+.am-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.4;
+  transition: opacity 0.4s ease, color 0.4s ease;
+}
+
+.am-step--active {
+  opacity: 1;
+  color: #0d9488;
+  font-weight: 700;
+}
+
+.am-step__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.am-step--active .am-step__dot {
+  animation: amStepPulse 1s ease-in-out infinite;
+}
+
+@keyframes amStepPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.4); }
+  50% { transform: scale(1.4); box-shadow: 0 0 0 4px rgba(13, 148, 136, 0); }
+}
+
+.am-step__sep {
+  width: 16px;
+  height: 1px;
+  background: rgba(148, 163, 184, 0.4);
+}
+
+/* Compact variant for inline map loading */
+.am-loader--inline {
+  position: relative;
+  inset: auto;
+  z-index: auto;
+  background: transparent;
+  border-radius: 0;
+}
+
+.am-loader--inline .am-loader__landmark,
+.am-loader--inline .am-loader__grid {
+  display: none;
+}
+
+.am-loader--inline .am-loader__inner {
+  transform: scale(0.78);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .am-loader,
+  .am-loader__grid,
+  .am-radar-ring,
+  .am-radar-sweep,
+  .am-loader__disc,
+  .am-loader__icon,
+  .am-orbit,
+  .am-orbit--rev,
+  .am-pin,
+  .am-loader__route-fill,
+  .am-loader__route-pin,
+  .am-loader__landmark--pyramids,
+  .am-loader__landmark--pyramids-right {
+    animation: none !important;
+  }
+  .am-radar-ring { opacity: 0.4; }
+  .am-loader__route-fill { width: 100%; }
+}

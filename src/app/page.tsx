@@ -13,28 +13,22 @@ import SubmitForm from '@/components/accessibility-map/SubmitForm';
 import StatsDashboard from '@/components/accessibility-map/StatsDashboard';
 import AboutSection from '@/components/accessibility-map/AboutSection';
 import AdminSection from '@/components/accessibility-map/AdminSection';
+import LoadingScreen from '@/components/accessibility-map/LoadingScreen';
 import {
   MapPin,
   PlusCircle,
   BarChart3,
   Info,
   Languages,
-  Accessibility,
   Menu,
   X,
 } from 'lucide-react';
 
-// Dynamically import MapView to avoid SSR issues with Leaflet
+// Dynamically import MapView to avoid SSR issues with Leaflet.
+// Use the themed inline loading screen while the bundle is being fetched.
 const MapView = dynamic(() => import('@/components/accessibility-map/MapView'), {
   ssr: false,
-  loading: () => (
-    <div className="w-full h-full flex items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <Accessibility className="h-10 w-10 text-teal-400 mx-auto mb-2 animate-pulse" />
-        <p className="text-gray-400 text-sm">Loading map...</p>
-      </div>
-    </div>
-  ),
+  loading: () => <LoadingScreen variant="inline" />,
 });
 
 export default function Home() {
@@ -43,6 +37,7 @@ export default function Home() {
     language, setLanguage,
     fetchPlaces,
     places,
+    hasInitiallyLoaded,
   } = useAppStore();
   const isArabic = language === 'ar';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -79,12 +74,26 @@ export default function Home() {
     }
   }, []);
 
+  // Show the themed full-screen loader only during the genuine first load
+  // (before /api/places has resolved). The store latches hasInitiallyLoaded
+  // to true once the first fetch settles, so this never blocks subsequent
+  // filter refetches.
+  const showInitialLoader = !hasInitiallyLoaded;
+
   const navItems = [
     { view: 'map' as const, icon: MapPin, label: t('navMap', language) },
     { view: 'submit' as const, icon: PlusCircle, label: t('navSubmit', language) },
     { view: 'stats' as const, icon: BarChart3, label: t('navStats', language) },
     { view: 'about' as const, icon: Info, label: t('navAbout', language) },
   ];
+
+  if (showInitialLoader) {
+    return (
+      <ErrorBoundary>
+        <LoadingScreen variant="fullscreen" />
+      </ErrorBoundary>
+    );
+  }
 
   return (
     <ErrorBoundary>

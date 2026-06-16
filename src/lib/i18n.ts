@@ -157,6 +157,15 @@ export const translations = {
     aboutTechTitle: 'Built With',
     aboutTechDesc: 'Next.js, React, TypeScript, Leaflet, Prisma, and shadcn/ui — modern web technologies for an accessible future.',
 
+    // Loading Screen
+    loadingTitle: 'AccessMap Egypt',
+    loadingSubtitle: 'Mapping accessibility across Egypt',
+    loadingStatus: 'Loading accessible places',
+    loadingHint: 'Scanning cities for wheelchair-friendly spots',
+    loadingStep1: 'Connecting to map',
+    loadingStep2: 'Fetching places',
+    loadingStep3: 'Almost there',
+
     // Common
     loading: 'Loading...',
     error: 'An error occurred',
@@ -320,6 +329,15 @@ export const translations = {
     aboutCreatorVision: 'رؤيتنا هي مصر يستطيع فيها كل شخص، بغض النظر عن قدراته، الوصول إلى الأماكن العامة بكرامة واستقلالية.',
     aboutTechTitle: 'بُني باستخدام',
     aboutTechDesc: 'Next.js، React، TypeScript، Leaflet، Prisma، و shadcn/ui — تقنيات ويب حديثة لمستقبل أكثر إمكانية للوصول.',
+
+    // Loading Screen
+    loadingTitle: 'خريطة الوصول مصر',
+    loadingSubtitle: 'نرسم خريطة إمكانية الوصول عبر مصر',
+    loadingStatus: 'جاري تحميل الأماكن المتاحة',
+    loadingHint: 'نمسح المدن بحثاً عن أماكن مناسبة للكراسي المتحركة',
+    loadingStep1: 'الاتصال بالخريطة',
+    loadingStep2: 'جلب الأماكن',
+    loadingStep3: 'كدنا ننتهي',
 
     // Common
     loading: 'جاري التحميل...',
