@@ -7,7 +7,7 @@ test.describe('Language Toggle', () => {
 
   test('switches from English to Arabic', async ({ page }) => {
     // Verify English content first
-    await expect(page.getByText('AccessMap Egypt')).toBeVisible();
+    await expect(page.getByRole('banner').getByText('AccessMap Egypt', { exact: true })).toBeVisible();
 
     // Click language toggle
     const langButton = page.getByRole('button', { name: /عربي/ });
@@ -35,7 +35,7 @@ test.describe('Language Toggle', () => {
     await page.waitForTimeout(500);
 
     // Verify English again
-    await expect(page.getByText('AccessMap Egypt')).toBeVisible();
+    await expect(page.getByRole('banner').getByText('AccessMap Egypt', { exact: true })).toBeVisible();
   });
 
   test('Arabic layout is RTL', async ({ page }) => {

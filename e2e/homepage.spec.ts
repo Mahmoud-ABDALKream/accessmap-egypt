@@ -10,7 +10,7 @@ test.describe('Homepage', () => {
   });
 
   test('header is visible with app name', async ({ page }) => {
-    await expect(page.getByText('AccessMap Egypt')).toBeVisible();
+    await expect(page.getByRole('banner').getByText('AccessMap Egypt', { exact: true })).toBeVisible();
   });
 
   test('map container loads', async ({ page }) => {
@@ -30,7 +30,7 @@ test.describe('Homepage', () => {
   test('footer is visible on desktop', async ({ page }) => {
     const footer = page.locator('footer');
     await expect(footer).toBeVisible();
-    await expect(footer.getByText(/AccessMap Egypt/)).toBeVisible();
+    await expect(footer.getByText('AccessMap Egypt', { exact: true })).toBeVisible();
   });
 
   test('language toggle button is present', async ({ page }) => {
